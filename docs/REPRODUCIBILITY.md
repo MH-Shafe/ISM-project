@@ -69,3 +69,38 @@ CERT r4.2
 - pyarrow (for parquet I/O)
 
 If your development environment differs from the validated environment, document the differences here and verify that results are still reproducible.
+
+## Test Tiers
+
+The test suite is designed so that `pytest` produces **0 failures** from a clean clone. Tests are organized into tiers:
+
+### Tier 1: Core (always pass)
+~448 tests using synthetic fixtures. No dataset or external artifacts required. These cover feature computation, model loading, evaluation logic, configuration, and all algorithmic paths.
+
+### Tier 2: Dataset-dependent (skipped without CERT r4.2)
+~16 tests requiring the raw CERT r4.2 dataset in `data/raw/cert_r4.2/`. These validate data ingestion, label generation, and end-to-end pipeline behavior on real data.
+
+### Tier 3: Kaggle-artifact-dependent (skipped without frozen intermediates)
+~16 tests requiring frozen intermediate artifacts produced during Kaggle execution:
+
+| Test group | Required artifact | Location |
+|---|---|---|
+| Frozen input MD5 checks | `phase6_merged_features.parquet`, `phase14_split.json`, `phase15_cal_scores.parquet`, `phase14_test_predictions.parquet`, `phase14_user_diagnostics.json`, `phase18_role_department.parquet` | `artifacts/` |
+| Model MD5 check | `phase14_model.txt` | `artifacts/` |
+| Gate reproduction | `phase14_test_predictions.parquet` | `artifacts/` |
+| Role table schema | `phase18_role_department.parquet` | `artifacts/` |
+| Diagnostic user checks | `phase14_split.json`, `phase14_user_diagnostics.json` | `artifacts/` |
+| Engine determinism | `run_phase18.py` | `kaggle_scripts/` |
+| Phase 19 allocation | `phase19_user_allocation.json` | `reports/artifacts/` |
+
+These artifacts are produced by the full Kaggle pipeline and are intentionally excluded from the Git repository (too large, environment-specific).
+
+### Tier 4: Optional-dependency (skipped without torch/PyG)
+~16 tests for Families H1, H2, I, J. Skipped when PyTorch or PyG is not installed.
+
+### Running the full validation suite
+To run all tests including artifact-dependent ones:
+1. Execute the full pipeline on Kaggle (all 24 notebooks pass).
+2. The frozen artifacts will be in `artifacts/` and `reports/artifacts/`.
+3. The Kaggle engine scripts will be in `kaggle_scripts/`.
+4. Run `pytest` locally with all artifacts present — all 562 tests will execute.

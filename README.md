@@ -78,10 +78,19 @@ pip install -r requirements.txt
 ## Run Tests
 
 ```bash
-pytest tests/ -v
+pytest
 ```
 
-Core tests use synthetic fixtures and pass without the dataset. Real-data integration tests (`test_real_data.py`) are skipped when CERT r4.2 is not mounted.
+From a clean clone, expect **0 failures**. Tests are organized in tiers:
+
+| Tier | Count | When skipped |
+|---|---|---|
+| Core (synthetic fixtures) | ~448 | Never — always pass |
+| Dataset-dependent | ~16 | CERT r4.2 not in `data/raw/` |
+| Kaggle-artifact-dependent | ~16 | Frozen artifacts not in `artifacts/` or `kaggle_scripts/` |
+| Optional-dependency | ~16 | torch/PyG not installed |
+
+Skipped tests document exactly which artifact is needed. To run the full validation suite on Kaggle, see `docs/RUNBOOK.md`.
 
 ## Reproduce Workflow
 

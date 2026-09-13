@@ -32,10 +32,17 @@ Place files under `data/raw/cert_r4.2/` as documented in `data/README.md`.
 ## 3. Run tests
 
 ```bash
-pytest tests/ -v
+pytest
 ```
 
-All core tests should pass. Real-data integration tests (`test_real_data.py`) are skipped when the dataset is not mounted.
+From a clean clone, expect **0 failures**. Tests fall into tiers:
+
+- **Core tests (~448):** Use synthetic fixtures, always pass without any data.
+- **Dataset-dependent (~16):** Require CERT r4.2 in `data/raw/cert_r4.2/`. Skipped with explanation when dataset is absent.
+- **Kaggle-artifact-dependent (~16):** Require frozen intermediate artifacts from a full Kaggle execution (e.g., `artifacts/phase14_test_predictions.parquet`, `kaggle_scripts/run_phase18.py`, `reports/artifacts/phase19_user_allocation.json`). These are produced by the Kaggle pipeline and not included in the Git repository.
+- **Optional-dependency (~16):** Require torch or PyG. Skipped when not installed.
+
+To run the full validation suite, execute the notebooks on Kaggle where the dataset and all artifacts are available.
 
 ## 4. Run the pipeline
 
