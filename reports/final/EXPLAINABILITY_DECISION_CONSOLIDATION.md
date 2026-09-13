@@ -4,7 +4,7 @@ Consolidated record of the explainability layer (Phase 11) and the full
 decision table (Phase 20), including coverage, distribution, and integration
 evidence.
 
-**Last updated**: 2026-09-12
+**Last updated**: 2026-09-14
 **Frozen classifier**: `lgbm-graph-v1` (LightGBM 4.6.0, 12 features, seed 42, best_iteration 186)
 
 ---

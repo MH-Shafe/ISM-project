@@ -12,7 +12,7 @@ current verified state, frozen configuration, decisions, rejections, risks.
 |---|---|
 | Report path | `reports/ISM_MASTER_REPORT.md` |
 | Purpose | One-file project handoff for independent GPT review, planning, debugging, and research discussion |
-| Last updated | 2026-09-12 |
+| Last updated | 2026-09-14 |
 | Latest completed phase | Final Project Consolidation (all documentation complete) |
 | Project status | Final consolidation complete — all ablation evidence, calibration/conformal, explainability/decision, reproducibility, and conclusions documented; master report updated; consistency audit passed; final archive created. Model development STOPPED. |
 | Current production candidate | `lgbm-graph-v1` (frozen, Phase 7) |
@@ -87,6 +87,9 @@ CERT logs
   diagnostics, explanations, alert flag, recommended action;
   39/39 tests pass; Adaptive Risk excluded from production path)
 ```
+
+*(See [Figure 1](figures/fig1_system_architecture.png) for the visual
+pipeline diagram.)*
 
 Component status: implemented + frozen — aggregation, features, model,
 threshold, explainability; accepted overlays — conformal, explainability;
@@ -907,6 +910,10 @@ All TEST metrics above evaluated exactly once per finalized experiment on the
 | CALIBRATION | 2011-02-01 .. 2011-03-31 | 59,000 | 323 |
 | TEST | ≥ 2011-04-01 | 47,000 | 30 |
 
+*(See [Figure 2](figures/fig2_chronological_split.png) for the split
+timeline and [Figure 3](figures/fig3_class_distribution.png) for class
+distribution.)*
+
 ### Features
 
 Exact frozen 12-feature list (verified against `src/experiments/phase7.py`
@@ -1186,6 +1193,8 @@ counts — this remains supported by the Phase 6/7 records.
   |contribution| but **bipolar** — signed effect ≈ 0 on alert rows (raises
   risk for some rows, lowers it for others); do not summarize with one sign.
   Kendall τ (gain vs explanation) 0.727 CAL / 0.697 TRAIN (descriptive).
+  *(See [Figure 5](figures/fig5_feature_importance.png) for the global
+  SHAP importance bar chart.)*
 - **Graph contribution (OBSERVED)**: 4 graph features carry **20.5%** of
   alert-row |contribution|.
 - **Stability (OBSERVED)**: bit-identical recompute; row-order invariant;
@@ -1406,6 +1415,28 @@ re-verified in Phases 9–11.
 
 Measured values (OBSERVED); everything not listed is NOT VERIFIED.
 
+### Computational Efficiency Summary
+
+The frozen system is designed for lightweight continuous operation. All
+measurements below are wall-clock time and peak RSS on a single CPU core;
+**CPU utilization % was NOT MEASURED** and must not be inferred from wall-clock
+times. GPU was not used for any component.
+
+| Metric | Value | Source |
+|---|---|---|
+| Model training (lgbm-graph-v1, 12 features, 186 trees) | 4.64 s | phase7_freeze record |
+| Model inference (47,000 TEST rows) | 1.29 s | phase7_freeze record |
+| Graph feature generation (501K user-days) | 13.0 s | phase6_cost.json |
+| Full decision engine (501K rows, all overlays) | 180.3 s | phase20_cost |
+| Peak memory (full decision engine) | 1,744 MB | phase20_cost |
+| Model disk size | 651 KB | phase7_freeze record |
+| Explanations parquet (21,043 TEST-alert rows) | 4.66 MB | phase11_cost |
+
+**Sustained throughput estimate (INFERENCE)**: scoring 1,000 user-days takes
+~0.26 s (linear extrapolation from 47K in 1.29 s). A 10,000-user deployment
+would score one day in ~2.6 s; the full 501K-day table in ~130 s. These are
+INFERENCE from OBSERVED single-run measurements, not a benchmark.
+
 | Component | Time | Memory | Artifact size | GPU | Notes |
 |---|---|---|---|---|---|
 | User-day aggregation (501,000 rows, incl. 14.5 GB http) | not measured | duckdb path (pandas path OOM ~28.7 GB RSS) | table on Kaggle | no | rebuild `build_user_day.py` |
@@ -1468,6 +1499,19 @@ RESOLVED).
 ---
 
 ## 20. Rejected / Failed Approaches
+
+### Baseline Scope Note
+
+The model comparison in this project was restricted to LightGBM variants
+within the same training framework. **Random Forest, XGBoost, CatBoost, and
+Logistic Regression** were proposed as candidate baselines during early
+planning but were **never trained, evaluated, or recorded** in any
+authoritative artifact. No RF/XGBoost/CatBoost/LR result exists in
+`reports/artifacts/`; any comparison table that includes these algorithms
+would contain fabricated data. The ablation in Table 1 (Section 31) is the
+only published model comparison and covers LightGBM arms A–C plus an
+adaptive-risk variant. A broader algorithmic comparison remains an open
+direction for future authorized work.
 
 | Approach | What was tested | Evidence | Decision | Reconsideration possible? |
 |---|---|---|---|---|
@@ -2210,6 +2254,9 @@ All consolidation documents created in `reports/final/`:
 | C | lgbm-graph-v1 (12f) | 0.93916 | 0.26778 | 0.354 | 0.365 | 49 | FREEZE CANDIDATE |
 | D1 | Adaptive Risk (equal-weight) | 0.90977 | 0.06720 | 0.105 | 0.170 | 256 | REJECTED |
 
+*(See [Figure 4](figures/fig4_ablation_comparison.png) for a visual
+comparison of the ablation arms.)*
+
 ### Ablation Summary (Table 2 — Incremental System Layers)
 
 | Entry | Layer | Evidence | Verdict |
@@ -2218,6 +2265,10 @@ All consolidation documents created in `reports/final/`:
 | D2 | Phase 19 CONFIRM | Separate user-disjoint cohort | FAIL |
 | E | Conformal confidence | CAL-only fit, TEST evaluation | ACCEPT |
 | F | Full decision table | 501K materialization | COMPLETE |
+
+*(See [Figure 6](figures/fig6_decision_distribution.png) for the Phase 20
+decision distribution and [Figure 7](figures/fig7_runtime_modelsize.png)
+for computational cost comparison.)*
 
 ### Key Artifacts
 

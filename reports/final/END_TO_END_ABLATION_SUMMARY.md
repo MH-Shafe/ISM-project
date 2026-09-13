@@ -3,7 +3,7 @@
 Consolidated evidence across all project phases, organized into two tables
 with strict comparability discipline.
 
-**Last updated**: 2026-09-12
+**Last updated**: 2026-09-14
 **Dataset**: CERT r4.2, user × day (501,000 rows, 1,892 malicious, 0.38% prevalence)
 **Splits**: TRAIN 395,000 / CAL 59,000 / TEST 47,000 (chronological, no overlap)
 
@@ -28,6 +28,13 @@ Phase 6, Phase 7, Phase 8). TEST n = 47,000; positives = 30.
 2. **B alone (graph-only)**: AUC-PR 0.014 — graph features are weak discriminators in isolation.
 3. **D1 (adaptive risk)**: Degrades every metric vs A. Trust and behavior components are redundant or negatively correlated with the target.
 4. **C is the dominant model** by all metrics except alerts (49 vs 22), where the difference reflects a higher recall operating point.
+
+### Scope Note
+
+This ablation covers LightGBM variants only. **Random Forest, XGBoost,
+CatBoost, and Logistic Regression** were proposed but never trained or
+evaluated. No artifacts for these algorithms exist in `reports/artifacts/`.
+The comparison is limited to the LightGBM framework.
 
 ### Table 1 Source Artifacts
 

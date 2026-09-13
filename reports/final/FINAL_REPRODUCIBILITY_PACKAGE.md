@@ -2,7 +2,7 @@
 
 Complete reproducibility record for the frozen insider-threat detection system.
 
-**Last updated**: 2026-09-12
+**Last updated**: 2026-09-14
 **Frozen model**: `lgbm-graph-v1` (LightGBM 4.6.0, 12 features, seed 42, best_iteration 186)
 
 ---
