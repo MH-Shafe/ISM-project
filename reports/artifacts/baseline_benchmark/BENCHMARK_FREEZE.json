@@ -1,0 +1,86 @@
+{
+  "experiment_id": "post-freeze-baseline-benchmark",
+  "date": "2026-09-14",
+  "dataset": "CERT r4.2",
+  "split": {
+    "train_rows": 395000,
+    "train_pos": 1539,
+    "cal_rows": 59000,
+    "cal_pos": 323,
+    "test_rows": 47000,
+    "test_pos": 30
+  },
+  "features": [
+    "login_count",
+    "after_hours_login_count",
+    "usb_connection_count",
+    "file_access_count",
+    "sensitive_file_access_count",
+    "http_activity_count",
+    "unique_device_count",
+    "unusual_access_count",
+    "device_consistency_score",
+    "rare_device_usage_count",
+    "file_type_consistency_score",
+    "rare_file_type_access_count"
+  ],
+  "seed": 42,
+  "versions": {
+    "python": "3.12.13",
+    "numpy": "2.0.2",
+    "pandas": "2.3.3",
+    "lightgbm": "4.6.0",
+    "sklearn": "1.6.1",
+    "xgboost": "3.2.0",
+    "catboost": "1.2.10",
+    "pyarrow": "24.0.0"
+  },
+  "models": {
+    "logistic_regression": {
+      "penalty": "l2",
+      "solver": "liblinear",
+      "class_weight": "balanced",
+      "max_iter": 2000,
+      "random_state": 42
+    },
+    "random_forest": {
+      "n_estimators": 500,
+      "max_depth": null,
+      "min_samples_leaf": 2,
+      "max_features": "sqrt",
+      "class_weight": "balanced",
+      "random_state": 42
+    },
+    "xgboost": {
+      "n_estimators": 3000,
+      "learning_rate": 0.03,
+      "max_depth": 6,
+      "subsample": 0.8,
+      "colsample_bytree": 0.8,
+      "scale_pos_weight": 255.66,
+      "random_state": 42,
+      "early_stopping_rounds": 100
+    },
+    "catboost": {
+      "iterations": 3000,
+      "learning_rate": 0.03,
+      "depth": 6,
+      "class_weights": {"0": 1.0, "1": 255.66},
+      "random_seed": 42,
+      "early_stopping_rounds": 100
+    },
+    "lightgbm_benchmark": {
+      "objective": "binary",
+      "metric": "auc",
+      "learning_rate": 0.03,
+      "num_leaves": 31,
+      "min_data_in_leaf": 100,
+      "feature_fraction": 0.8,
+      "bagging_fraction": 0.8,
+      "seed": 42,
+      "scale_pos_weight": 255.66
+    }
+  },
+  "threshold_selection": "max F1 on CAL",
+  "note": "NEW BASELINE BENCHMARK - did not alter frozen production system"
+}

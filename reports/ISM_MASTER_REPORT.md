@@ -1502,16 +1502,15 @@ RESOLVED).
 
 ### Baseline Scope Note
 
-The model comparison in this project was restricted to LightGBM variants
-within the same training framework. **Random Forest, XGBoost, CatBoost, and
-Logistic Regression** were proposed as candidate baselines during early
-planning but were **never trained, evaluated, or recorded** in any
-authoritative artifact. No RF/XGBoost/CatBoost/LR result exists in
-`reports/artifacts/`; any comparison table that includes these algorithms
-would contain fabricated data. The ablation in Table 1 (Section 31) is the
-only published model comparison and covers LightGBM arms A–C plus an
-adaptive-risk variant. A broader algorithmic comparison remains an open
-direction for future authorized work.
+The original frozen development record did not contain completed artifacts
+for Logistic Regression, Random Forest, XGBoost, and CatBoost. To close this
+comparison gap, a **post-freeze controlled benchmark** was subsequently
+executed (2026-09-14) using the same 12-feature representation, chronological
+TRAIN/CAL/TEST split, and leakage-safe threshold protocol. These results are
+reported as additional baseline evidence in `reports/final/BASELINE_BENCHMARK_REPORT.md`
+and did not alter the frozen production system. The benchmark comparison shows
+LightGBM achieves the best F1 (0.354) and MCC (0.365) among all five models,
+confirming it as the best balanced choice for precision-critical detection.
 
 | Approach | What was tested | Evidence | Decision | Reconsideration possible? |
 |---|---|---|---|---|

@@ -31,10 +31,9 @@ Phase 6, Phase 7, Phase 8). TEST n = 47,000; positives = 30.
 
 ### Scope Note
 
-This ablation covers LightGBM variants only. **Random Forest, XGBoost,
-CatBoost, and Logistic Regression** were proposed but never trained or
-evaluated. No artifacts for these algorithms exist in `reports/artifacts/`.
-The comparison is limited to the LightGBM framework.
+This ablation covers LightGBM variants only. A **post-freeze benchmark**
+(2026-09-14) additionally compared Logistic Regression, Random Forest,
+XGBoost, and CatBoost — see `BASELINE_BENCHMARK_REPORT.md` for full results.
 
 ### Table 1 Source Artifacts
 

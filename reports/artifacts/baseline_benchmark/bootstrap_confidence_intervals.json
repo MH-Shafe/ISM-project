@@ -1,0 +1,119 @@
+{
+  "experiment_id": "baseline_benchmark_20260914",
+  "method": "bootstrap",
+  "resamples": 1000,
+  "confidence_level": 0.95,
+  "random_seed": 42,
+  "models": {
+    "Logistic Regression": {
+      "roc_auc": {
+        "point_estimate": 0.88319,
+        "ci_lower": 0.80621,
+        "ci_upper": 0.94374
+      },
+      "pr_auc": {
+        "point_estimate": 0.00998,
+        "ci_lower": 0.00675,
+        "ci_upper": 0.01505
+      },
+      "f1": {
+        "point_estimate": 0.03043,
+        "ci_lower": 0.01710,
+        "ci_upper": 0.04941
+      },
+      "mcc": {
+        "point_estimate": 0.08682,
+        "ci_lower": 0.04900,
+        "ci_upper": 0.13706
+      }
+    },
+    "Random Forest": {
+      "roc_auc": {
+        "point_estimate": 0.77148,
+        "ci_lower": 0.69966,
+        "ci_upper": 0.84170
+      },
+      "pr_auc": {
+        "point_estimate": 0.18527,
+        "ci_lower": 0.11623,
+        "ci_upper": 0.27599
+      },
+      "f1": {
+        "point_estimate": 0.17536,
+        "ci_lower": 0.09565,
+        "ci_upper": 0.27027
+      },
+      "mcc": {
+        "point_estimate": 0.20622,
+        "ci_lower": 0.11683,
+        "ci_upper": 0.30698
+      }
+    },
+    "XGBoost": {
+      "roc_auc": {
+        "point_estimate": 0.94027,
+        "ci_lower": 0.90687,
+        "ci_upper": 0.97364
+      },
+      "pr_auc": {
+        "point_estimate": 0.27164,
+        "ci_lower": 0.16376,
+        "ci_upper": 0.40480
+      },
+      "f1": {
+        "point_estimate": 0.28293,
+        "ci_lower": 0.18644,
+        "ci_upper": 0.39189
+      },
+      "mcc": {
+        "point_estimate": 0.34687,
+        "ci_lower": 0.23940,
+        "ci_upper": 0.45678
+      }
+    },
+    "CatBoost": {
+      "roc_auc": {
+        "point_estimate": 0.91982,
+        "ci_lower": 0.87292,
+        "ci_upper": 0.96484
+      },
+      "pr_auc": {
+        "point_estimate": 0.18058,
+        "ci_lower": 0.10898,
+        "ci_upper": 0.27846
+      },
+      "f1": {
+        "point_estimate": 0.23125,
+        "ci_lower": 0.14080,
+        "ci_upper": 0.33929
+      },
+      "mcc": {
+        "point_estimate": 0.28012,
+        "ci_lower": 0.17542,
+        "ci_upper": 0.38821
+      }
+    },
+    "LightGBM": {
+      "roc_auc": {
+        "point_estimate": 0.93945,
+        "ci_lower": 0.90285,
+        "ci_upper": 0.97330
+      },
+      "pr_auc": {
+        "point_estimate": 0.26877,
+        "ci_lower": 0.16099,
+        "ci_upper": 0.40552
+      },
+      "f1": {
+        "point_estimate": 0.35219,
+        "ci_lower": 0.24194,
+        "ci_upper": 0.47059
+      },
+      "mcc": {
+        "point_estimate": 0.36373,
+        "ci_lower": 0.25355,
+        "ci_upper": 0.47520
+      }
+    }
+  }
+}

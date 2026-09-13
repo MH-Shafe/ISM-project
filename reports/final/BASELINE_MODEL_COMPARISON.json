@@ -1,0 +1,144 @@
+{
+  "experiment": {
+    "id": "baseline_benchmark_20260914",
+    "date": "2026-09-14",
+    "dataset": "CERT r4.2",
+    "description": "Baseline model comparison for insider threat detection"
+  },
+  "models": [
+    {
+      "name": "Logistic Regression",
+      "evidence_type": "NEW BASELINE BENCHMARK",
+      "metrics": {
+        "roc_auc": 0.88287,
+        "pr_auc": 0.00993,
+        "precision": 0.01430,
+        "recall": 0.53333,
+        "f1": 0.02785,
+        "mcc": 0.08447,
+        "alerts": 1119,
+        "threshold": 0.84732,
+        "train_time_s": 2.72,
+        "model_size_bytes": 1757,
+        "brier_score": 0.15613
+      }
+    },
+    {
+      "name": "Random Forest",
+      "evidence_type": "NEW BASELINE BENCHMARK",
+      "metrics": {
+        "roc_auc": 0.77291,
+        "pr_auc": 0.18309,
+        "precision": 0.11702,
+        "recall": 0.36667,
+        "f1": 0.17742,
+        "mcc": 0.20628,
+        "alerts": 94,
+        "threshold": 0.48006,
+        "train_time_s": 39.87,
+        "model_size_bytes": 79778441,
+        "brier_score": 0.09572
+      }
+    },
+    {
+      "name": "XGBoost",
+      "evidence_type": "NEW BASELINE BENCHMARK",
+      "metrics": {
+        "roc_auc": 0.94002,
+        "pr_auc": 0.26933,
+        "precision": 0.18018,
+        "recall": 0.66667,
+        "f1": 0.28369,
+        "mcc": 0.34588,
+        "alerts": 111,
+        "threshold": 0.81989,
+        "train_time_s": 9.06,
+        "model_size_bytes": 2162687,
+        "brier_score": 0.09936
+      }
+    },
+    {
+      "name": "CatBoost",
+      "evidence_type": "NEW BASELINE BENCHMARK",
+      "metrics": {
+        "roc_auc": 0.91990,
+        "pr_auc": 0.17922,
+        "precision": 0.14815,
+        "recall": 0.53333,
+        "f1": 0.23188,
+        "mcc": 0.28029,
+        "alerts": 108,
+        "threshold": 0.88767,
+        "train_time_s": 39.50,
+        "model_size_bytes": 490496,
+        "brier_score": 0.11212
+      }
+    },
+    {
+      "name": "LightGBM (benchmark)",
+      "evidence_type": "NEW BASELINE BENCHMARK",
+      "metrics": {
+        "roc_auc": 0.93916,
+        "pr_auc": 0.26778,
+        "precision": 0.28571,
+        "recall": 0.46667,
+        "f1": 0.35443,
+        "mcc": 0.36464,
+        "alerts": 49,
+        "threshold": 0.91860,
+        "train_time_s": 6.87,
+        "model_size_bytes": 650716,
+        "brier_score": 0.10126
+      }
+    },
+    {
+      "name": "LightGBM (frozen)",
+      "evidence_type": "FROZEN PRODUCTION",
+      "metrics": {
+        "roc_auc": 0.93916,
+        "pr_auc": 0.26778,
+        "precision": 0.286,
+        "recall": 0.467,
+        "f1": 0.354,
+        "mcc": 0.365,
+        "alerts": 49,
+        "threshold": 0.91860,
+        "train_time_s": 4.64,
+        "model_size_bytes": 651047,
+        "brier_score": null
+      }
+    }
+  ],
+  "bootstrap_confidence_intervals": {
+    "Logistic Regression": {
+      "roc_auc": {"point": 0.88319, "ci_95": [0.80621, 0.94374]},
+      "pr_auc": {"point": 0.00998, "ci_95": [0.00675, 0.01505]},
+      "f1": {"point": 0.03043, "ci_95": [0.01710, 0.04941]},
+      "mcc": {"point": 0.08682, "ci_95": [0.04900, 0.13706]}
+    },
+    "Random Forest": {
+      "roc_auc": {"point": 0.77148, "ci_95": [0.69966, 0.84170]},
+      "pr_auc": {"point": 0.18527, "ci_95": [0.11623, 0.27599]},
+      "f1": {"point": 0.17536, "ci_95": [0.09565, 0.27027]},
+      "mcc": {"point": 0.20622, "ci_95": [0.11683, 0.30698]}
+    },
+    "XGBoost": {
+      "roc_auc": {"point": 0.94027, "ci_95": [0.90687, 0.97364]},
+      "pr_auc": {"point": 0.27164, "ci_95": [0.16376, 0.40480]},
+      "f1": {"point": 0.28293, "ci_95": [0.18644, 0.39189]},
+      "mcc": {"point": 0.34687, "ci_95": [0.23940, 0.45678]}
+    },
+    "CatBoost": {
+      "roc_auc": {"point": 0.91982, "ci_95": [0.87292, 0.96484]},
+      "pr_auc": {"point": 0.18058, "ci_95": [0.10898, 0.27846]},
+      "f1": {"point": 0.23125, "ci_95": [0.14080, 0.33929]},
+      "mcc": {"point": 0.28012, "ci_95": [0.17542, 0.38821]}
+    },
+    "LightGBM": {
+      "roc_auc": {"point": 0.93945, "ci_95": [0.90285, 0.97330]},
+      "pr_auc": {"point": 0.26877, "ci_95": [0.16099, 0.40552]},
+      "f1": {"point": 0.35219, "ci_95": [0.24194, 0.47059]},
+      "mcc": {"point": 0.36373, "ci_95": [0.25355, 0.47520]}
+    }
+  }
+}

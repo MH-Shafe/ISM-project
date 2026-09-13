@@ -148,10 +148,10 @@ Decision Table (Phase 20, complete)
 2. **Single dataset** — CERT r4.2 only; no cross-dataset validation
 3. **No online learning** — static model, no adaptation to concept drift
 4. **Explanations are attributions, not causes** — top-3 rank churn ≈ 95%
-5. **Algorithm scope limited to LightGBM** — Random Forest, XGBoost, CatBoost,
-   and Logistic Regression were proposed but never trained or evaluated; no
-   comparison artifacts exist. A broader algorithmic comparison is an open
-   direction for future authorized work.
+5. **Algorithm scope**: A post-freeze benchmark (2026-09-14) compared Logistic
+   Regression, Random Forest, XGBoost, CatBoost, and LightGBM on the same
+   features/split. LightGBM achieved the best F1 (0.354) and MCC (0.365).
+   Full results in `BASELINE_BENCHMARK_REPORT.md`.
 
 ---
 
