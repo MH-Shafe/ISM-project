@@ -1,0 +1,8 @@
+Metadata-Version: 2.4
+Name: ism-project-shafe
+Version: 1.0.0
+Summary: Leakage-resistant insider-threat detection using CERT r4.2
+License: MIT
+Requires-Python: >=3.10
+License-File: LICENSE
+Dynamic: license-file

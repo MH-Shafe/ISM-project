@@ -1,0 +1,20 @@
+# Exact validated Windows versions (PC verification environment)
+# OBSERVED 2026-08-17, Phase 16. Python 3.11.9 (Windows).
+#
+# IMPORTANT: These are NOT the Kaggle training environment versions.
+# The frozen model was TRAINED on Kaggle with lightgbm==4.6.0
+# (see reports/artifacts/phase7_freeze_lgbm-graph-v1.json).
+# Local lightgbm 4.7.0 reproduced frozen TEST scores to max abs diff 5.6e-17
+# (Phase 15 gate).
+#
+# Use: pip install -r requirements-local-lock.txt
+
+lightgbm==4.7.0
+numpy==2.4.6
+pandas==3.0.5
+scikit-learn==1.9.0
+scipy
+pyarrow==25.0.1
+pytest==9.1.1
+matplotlib
+PyYAML

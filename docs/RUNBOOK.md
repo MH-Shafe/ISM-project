@@ -11,8 +11,8 @@ Step-by-step instructions to run the ISM Project Shafe pipeline.
 ## 1. Clone and set up
 
 ```bash
-git clone git@github.com:MH-Shafe/ISM-Project-Shafe.git
-cd ISM-Project-Shafe
+git clone https://github.com/MH-Shafe/ISM-project.git
+cd ISM-project
 
 python -m venv .venv
 # Windows:
@@ -20,7 +20,9 @@ python -m venv .venv
 # Linux/macOS:
 source .venv/bin/activate
 
-pip install -r requirements.txt
+python -m pip install --upgrade pip
+python -m pip install -r requirements.txt
+python -m pip install -e .
 ```
 
 ## 2. Obtain CERT r4.2

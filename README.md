@@ -47,26 +47,37 @@ CERT r4.2
 
 **Adaptive Risk:** Evaluated across 10 algorithm families (Phases 8, 18, 19). REJECTED for production — delta ROC-AUC = -0.028.
 
-## Installation
-
-### Windows
+## Quick Start (Windows / Linux / macOS)
 
 ```bash
-git clone git@github.com:MH-Shafe/ISM-Project-Shafe.git
-cd ISM-Project-Shafe
+git clone https://github.com/MH-Shafe/ISM-project.git
+cd ISM-project
+
 python -m venv .venv
+
+# Windows:
 .venv\Scripts\activate
-pip install -r requirements.txt
+# Linux/macOS:
+source .venv/bin/activate
+
+python -m pip install --upgrade pip
+python -m pip install -r requirements.txt
+python -m pip install -e .
+
+pytest -q
 ```
 
-### Linux/macOS
+CERT r4.2 is **not** required for core/frozen-artifact tests. See [Dataset Setup](#dataset-setup) for full pipeline reproduction.
 
-```bash
-git clone git@github.com:MH-Shafe/ISM-Project-Shafe.git
-cd ISM-Project-Shafe
-python -m venv .venv
-source .venv/bin/activate
-pip install -r requirements.txt
+## Quick Start (Kaggle)
+
+```python
+!git clone https://github.com/MH-Shafe/ISM-project.git
+%cd ISM-project
+
+!python -m pip install -r requirements.txt
+!python -m pip install -e .
+!pytest -q
 ```
 
 ## Dataset Setup

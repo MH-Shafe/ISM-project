@@ -61,12 +61,23 @@ CERT r4.2
 
 ## Known Software Versions
 
-- Python 3.11+
+### Frozen Training Environment (Kaggle)
+- Python 3.11
 - LightGBM 4.6.0
 - pandas 2.x
 - numpy 1.x
 - scikit-learn 1.x
-- pyarrow (for parquet I/O)
+
+### Local Verification Environment (Windows PC)
+- Python 3.11.9
+- LightGBM 4.7.0 (reproduces frozen scores to max abs diff 5.6e-17)
+- pandas 3.0.5
+- numpy 2.4.6
+- scikit-learn 1.9.0
+- pyarrow 25.0.1
+- pytest 9.1.1
+
+See `requirements-local-lock.txt` for exact Windows versions. Use `requirements.txt` for portable installation.
 
 If your development environment differs from the validated environment, document the differences here and verify that results are still reproducible.
 
