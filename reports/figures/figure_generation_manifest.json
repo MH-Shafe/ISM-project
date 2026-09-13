@@ -1,0 +1,25 @@
+{
+  "generator": "scripts/generate_report_figures.py",
+  "repo_root": "D:\\Class\\ISM\\ISM-Project-Shafe-Git",
+  "inputs": {
+    "baseline_csv": "D:\\Class\\ISM\\ISM-Project-Shafe-Git\\reports\\final\\BASELINE_MODEL_COMPARISON.csv",
+    "all_results": "D:\\Class\\ISM\\ISM-Project-Shafe-Git\\reports\\artifacts\\baseline_benchmark\\all_results.json",
+    "freeze": "D:\\Class\\ISM\\ISM-Project-Shafe-Git\\reports\\artifacts\\baseline_benchmark\\BENCHMARK_FREEZE.json",
+    "bootstrap_ci": "D:\\Class\\ISM\\ISM-Project-Shafe-Git\\reports\\artifacts\\baseline_benchmark\\bootstrap_confidence_intervals.json"
+  },
+  "created": [
+    "D:\\Class\\ISM\\ISM-Project-Shafe-Git\\reports\\figures\\figure_01_final_system_architecture.png",
+    "D:\\Class\\ISM\\ISM-Project-Shafe-Git\\reports\\figures\\figure_02_chronological_split.png",
+    "D:\\Class\\ISM\\ISM-Project-Shafe-Git\\reports\\figures\\figure_03_class_distribution.png",
+    "D:\\Class\\ISM\\ISM-Project-Shafe-Git\\reports\\figures\\figure_04_ablation_comparison.png",
+    "D:\\Class\\ISM\\ISM-Project-Shafe-Git\\reports\\figures\\figure_05a_roc_curves.png",
+    "D:\\Class\\ISM\\ISM-Project-Shafe-Git\\reports\\figures\\figure_05b_precision_recall_curves.png",
+    "D:\\Class\\ISM\\ISM-Project-Shafe-Git\\reports\\figures\\figure_06_shap_feature_importance.png",
+    "D:\\Class\\ISM\\ISM-Project-Shafe-Git\\reports\\figures\\figure_07_final_decision_distribution.png",
+    "D:\\Class\\ISM\\ISM-Project-Shafe-Git\\reports\\figures\\figure_08_model_baseline_comparison.png",
+    "D:\\Class\\ISM\\ISM-Project-Shafe-Git\\reports\\figures\\figure_09_confusion_counts.png",
+    "D:\\Class\\ISM\\ISM-Project-Shafe-Git\\reports\\figures\\figure_10_bootstrap_f1_ci.png"
+  ],
+  "skipped": [],
+  "note": "No model fitting or threshold tuning occurs in this script."
+}
