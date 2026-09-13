@@ -1,0 +1,94 @@
+{
+  "phase": "20",
+  "purpose": "Final System Integration - inventory of all frozen components",
+  "frozen_model": {
+    "name": "lgbm-graph-v1",
+    "framework": "LightGBM",
+    "version": "4.6.0",
+    "seed": 42,
+    "best_iteration": 186,
+    "params": {
+      "objective": "binary",
+      "metric": "auc",
+      "learning_rate": 0.03,
+      "num_leaves": 31,
+      "min_data_in_leaf": 100,
+      "feature_fraction": 0.8,
+      "bagging_fraction": 0.8,
+      "bagging_freq": 1,
+      "verbose": -1,
+      "seed": 42
+    },
+    "source_artifact": "reports/artifacts/phase7_freeze_lgbm-graph-v1.json"
+  },
+  "frozen_features": {
+    "list": [
+      "login_count",
+      "after_hours_login_count",
+      "usb_connection_count",
+      "file_access_count",
+      "sensitive_file_access_count",
+      "http_activity_count",
+      "unique_device_count",
+      "unusual_access_count",
+      "device_consistency_score",
+      "rare_device_usage_count",
+      "file_type_consistency_score",
+      "rare_file_type_access_count"
+    ],
+    "n_features": 12,
+    "feature_version": "v2 (8 behavioral + 4 graph; department_file_type_mismatch_count REJECTED in Phase 7)",
+    "source_artifact": "reports/artifacts/phase7_freeze_lgbm-graph-v1.json"
+  },
+  "frozen_split": {
+    "strategy": "chronological",
+    "train_range": "2010-01-02..2011-01-31",
+    "calibration_range": "2011-02-01..2011-03-31",
+    "test_range": "2011-04-01..2011-05-17",
+    "train_rows": 395000,
+    "calibration_rows": 59000,
+    "test_rows": 47000,
+    "train_malicious": 1539,
+    "calibration_malicious": 323,
+    "test_malicious": 30
+  },
+  "frozen_thresholds": {
+    "alert_threshold": 0.9186015432508062,
+    "alert_threshold_source": "Phase 9 frozen_max_f1 (best_f1_threshold on CALIBRATION)",
+    "conformal_alpha_005": {
+      "t0": 0.4634739481800199,
+      "t1": 0.0046536002164601275,
+      "k0": 2933,
+      "k1": 16,
+      "n1": 323,
+      "n0": 58677
+    },
+    "source_artifact": "reports/artifacts/phase10_calibration.json"
+  },
+  "frozen_policy": {
+    "id": "frozen_max_f1",
+    "kind": "threshold",
+    "param": 0.9186015432508062,
+    "selection_rule": "screens S1 (threshold CI width), S2 (window alert-rate ratio), S3 (window recall > 0); best eligible CALIBRATION F1 with fewer-alerts tie-break",
+    "source_artifact": "reports/artifacts/phase9_freeze.json"
+  },
+  "frozen_conformal": {
+    "method": "mondrian_split_conformal",
+    "decision": "ACCEPT",
+    "decision_reasons": {
+      "D1": "TEST positive coverage 1.000 >= 0.85 and Wilson LB 0.917 >= 0.75",
+      "D2": "TEST negative coverage 0.988 >= 0.9",
+      "D3": "usefulness: uncertain alerts 0 (gap 0.684), monitor rows 765",
+      "D4": "all 4 windows >= 0.7",
+      "D5": "inference 0.0543 s <= 2.0"
+    },
+    "source_artifact": "reports/artifacts/phase10_decision.json"
+  },
+  "phase19_verdict": {
+    "confirm_opened": true,
+    "confirm_completed": true,
+    "rerun_allowed": "NO",
+    "verdict": "FAIL",
+    "source_artifact": "phase19_v1_1_1/kaggle_confirm_results/phase19_v1_1_2_confirm_result.json"
+  }
+}

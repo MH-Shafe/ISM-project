@@ -1,0 +1,127 @@
+# Phase 20: Final User-Day Output Schema
+# Dashboard-ready output for analyst consumption.
+
+schema_version: "1.0"
+phase: 20
+purpose: "Final System Integration - dashboard-ready user-day output"
+
+# Required columns (all deterministic, frozen components only)
+columns:
+  # Identifiers
+  - name: user
+    type: string
+    description: "Employee user ID (e.g., AAA0001)"
+    source: input data
+
+  - name: day
+    type: string
+    description: "Calendar date (YYYY-MM-DD)"
+    source: input data
+
+  # ML risk score
+  - name: ml_risk
+    type: float
+    description: "Frozen LightGBM risk score (0-1, higher = more anomalous)"
+    source: "frozen lgbm-graph-v1 model"
+    frozen: true
+
+  # Risk level classification
+  - name: risk_level
+    type: string
+    enum: [ALERT, BORDERLINE, MONITOR, NON-ALERT]
+    description: "Risk level from Phase 11 validated deterministic threshold mapping"
+    source: "frozen thresholds (alert=0.9186, borderline_width=0.05, t0=0.4635)"
+    frozen: true
+
+  # Confidence/uncertainty
+  - name: confidence
+    type: float
+    description: "Conformal confidence (0.95 for singleton set, 0.90 for ambiguous)"
+    source: "frozen conformal fit (alpha=0.05)"
+    frozen: true
+
+  - name: conformal_set
+    type: string
+    enum: ["{1}", "{0}", "{0,1}", "{}"]
+    description: "Conformal prediction set at alpha=0.05"
+    source: "frozen conformal fit"
+    frozen: true
+
+  - name: p1
+    type: float
+    description: "Conformal p-value for class 1 (malicious)"
+    source: "frozen conformal fit"
+    frozen: true
+
+  - name: p0
+    type: float
+    description: "Conformal p-value for class 0 (benign)"
+    source: "frozen conformal fit"
+    frozen: true
+
+  # Alert flag
+  - name: alert_flag
+    type: boolean
+    description: "True if risk_level in (ALERT, BORDERLINE)"
+    source: deterministic from risk_level
+    frozen: true
+
+  # Recommended action
+  - name: recommended_action
+    type: string
+    enum: [escalate_to_incident_response, queue_for_analyst_review, add_to_watchlist, no_action_required]
+    description: "Deterministic recommended analyst action (Phase 11 validated)"
+    source: "frozen policy (risk_level + trust_flags)"
+    frozen: true
+
+  - name: urgency
+    type: string
+    enum: [immediate, within_24h, weekly, none]
+    description: "Action urgency from Phase 11 validated policy"
+    source: deterministic from risk_level
+    frozen: true
+
+  - name: rationale
+    type: string
+    description: "Human-readable explanation of the decision"
+    source: deterministic from score + thresholds + trust_flags
+    frozen: true
+
+  # Trust/graph diagnostics
+  - name: trust_flags
+    type: array
+    description: "List of active graph/trust diagnostic flags"
+    source: "frozen graph features"
+    frozen: true
+
+  - name: n_trust_flags
+    type: integer
+    description: "Count of active trust flags"
+    source: deterministic from trust_flags
+    frozen: true
+
+  # Graph features (raw values for analyst inspection)
+  - name: graph_features
+    type: object
+    description: "Frozen graph feature values for this user-day"
+    source: "frozen graph features"
+    frozen: true
+
+  # Explanation reasons
+  - name: top_reasons
+    type: array
+    description: "Top-N explanation reasons (feature, value, contribution, direction)"
+    source: "frozen SHAP/pred_contrib or feature values"
+    frozen: true
+
+  # Ground truth (for evaluation only, never used in production)
+  - name: is_malicious
+    type: integer
+    enum: [0, 1]
+    description: "Ground truth label (EVALUATION ONLY, not used in production)"
+    source: "answer key (evaluation only)"
+    evaluation_only: true
+
+# Record count
+total_records: "N/A (varies by input)"
+total_columns: 16

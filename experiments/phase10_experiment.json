@@ -1,0 +1,377 @@
+{
+  "experiment_id": "phase10-conformal",
+  "phase": "10",
+  "dataset_version": "CERT r4.2",
+  "model": {
+    "name": "lgbm-graph-v1",
+    "version": "4.6.0",
+    "best_iteration": 186
+  },
+  "feature_version": "v2 (8 behavioral + 4 graph; department_file_type_mismatch_count REJECTED in Phase 7)",
+  "split": {
+    "strategy": "chronological",
+    "train_range": "2010-01-02..2011-01-31",
+    "calibration_range": "2011-02-01..2011-03-31",
+    "test_range": "2011-04-01..2011-05-17",
+    "test": {
+      "rows": 47000,
+      "malicious": 30
+    }
+  },
+  "seed": 42,
+  "method": "mondrian_split_conformal",
+  "calibration_sample": {
+    "n1": 323,
+    "n0": 58677
+  },
+  "alphas": [
+    0.01,
+    0.05,
+    0.1,
+    0.2
+  ],
+  "frozen_alert_policy": {
+    "id": "frozen_max_f1",
+    "threshold": 0.9186015432508062,
+    "n_alerts_test": 49
+  },
+  "evaluation": {
+    "scope": "TEST only (2011-04-01..2011-05-17); evaluated once after the conformal design was frozen",
+    "classification": {
+      "n": 47000,
+      "positives": 30,
+      "auc_roc": 0.9391565538286849,
+      "auc_pr": 0.2677761042396373
+    },
+    "per_alpha": {
+      "0.01": {
+        "thresholds": {
+          "alpha": 0.01,
+          "k1": 3,
+          "k0": 586,
+          "t1": 0.0016124323005021867,
+          "t0": 0.5610163248107194
+        },
+        "coverage": {
+          "n": 47000,
+          "n_pos": 30,
+          "n_neg": 46970,
+          "marginal_coverage": 0.9914468085106383,
+          "pos_coverage": 1.0,
+          "neg_coverage": 0.9914413455397062,
+          "set_size_dist": {
+            "singleton1": 0.009,
+            "singleton0": 0.053085106382978725,
+            "ambiguous": 0.9379148936170213,
+            "empty": 0.0,
+            "mean_size": 1.9379148936170212
+          },
+          "positive_prediction_rate": 0.9469148936170213,
+          "positive_inclusion_count": 44505
+        },
+        "pos_coverage_wilson90": [
+          0.9172756918749007,
+          0.9999999999999999
+        ],
+        "neg_coverage_wilson90": [
+          0.9907133642921848,
+          0.9921127145099438
+        ],
+        "policy_crosstab": {
+          "alpha": 0.01,
+          "cells": {
+            "alert": {
+              "1": {
+                "n": 49,
+                "precision": 0.2857142857142857
+              },
+              "0": {
+                "n": 0,
+                "precision": 0.0
+              },
+              "01": {
+                "n": 0,
+                "precision": 0.0
+              },
+              "empty": {
+                "n": 0,
+                "precision": 0.0
+              }
+            },
+            "no_alert": {
+              "1": {
+                "n": 374,
+                "precision": 0.01871657754010695
+              },
+              "0": {
+                "n": 2495,
+                "precision": 0.0
+              },
+              "01": {
+                "n": 44082,
+                "precision": 0.0002041649652919559
+              },
+              "empty": {
+                "n": 0,
+                "precision": 0.0
+              }
+            }
+          },
+          "n_alerts": 49,
+          "n_uncertain_alerts": 0,
+          "n_monitor": 374,
+          "uncertain_alert_rate": 0.0
+        }
+      },
+      "0.05": {
+        "thresholds": {
+          "alpha": 0.05,
+          "k1": 16,
+          "k0": 2933,
+          "t1": 0.0046536002164601275,
+          "t0": 0.4634739481800199
+        },
+        "coverage": {
+          "n": 47000,
+          "n_pos": 30,
+          "n_neg": 46970,
+          "marginal_coverage": 0.9881063829787234,
+          "pos_coverage": 1.0,
+          "neg_coverage": 0.9880987864594422,
+          "set_size_dist": {
+            "singleton1": 0.012361702127659574,
+            "singleton0": 0.0848936170212766,
+            "ambiguous": 0.9027446808510639,
+            "empty": 0.0,
+            "mean_size": 1.9027446808510637
+          },
+          "positive_prediction_rate": 0.9151063829787234,
+          "positive_inclusion_count": 43010
+        },
+        "pos_coverage_wilson90": [
+          0.9172756918749007,
+          0.9999999999999999
+        ],
+        "neg_coverage_wilson90": [
+          0.9872471919722727,
+          0.9888941537201241
+        ],
+        "policy_crosstab": {
+          "alpha": 0.05,
+          "cells": {
+            "alert": {
+              "1": {
+                "n": 49,
+                "precision": 0.2857142857142857
+              },
+              "0": {
+                "n": 0,
+                "precision": 0.0
+              },
+              "01": {
+                "n": 0,
+                "precision": 0.0
+              },
+              "empty": {
+                "n": 0,
+                "precision": 0.0
+              }
+            },
+            "no_alert": {
+              "1": {
+                "n": 532,
+                "precision": 0.015037593984962405
+              },
+              "0": {
+                "n": 3990,
+                "precision": 0.0
+              },
+              "01": {
+                "n": 42429,
+                "precision": 0.00018855028400386527
+              },
+              "empty": {
+                "n": 0,
+                "precision": 0.0
+              }
+            }
+          },
+          "n_alerts": 49,
+          "n_uncertain_alerts": 0,
+          "n_monitor": 532,
+          "uncertain_alert_rate": 0.0
+        }
+      },
+      "0.1": {
+        "thresholds": {
+          "alpha": 0.1,
+          "k1": 32,
+          "k0": 5867,
+          "t1": 0.4634739481800199,
+          "t0": 0.4634739481800199
+        },
+        "coverage": {
+          "n": 47000,
+          "n_pos": 30,
+          "n_neg": 46970,
+          "marginal_coverage": 0.9881063829787234,
+          "pos_coverage": 1.0,
+          "neg_coverage": 0.9880987864594422,
+          "set_size_dist": {
+            "singleton1": 0.012361702127659574,
+            "singleton0": 0.5629148936170213,
+            "ambiguous": 0.4247234042553191,
+            "empty": 0.0,
+            "mean_size": 1.4247234042553192
+          },
+          "positive_prediction_rate": 0.4370851063829787,
+          "positive_inclusion_count": 20543
+        },
+        "pos_coverage_wilson90": [
+          0.9172756918749007,
+          0.9999999999999999
+        ],
+        "neg_coverage_wilson90": [
+          0.9872471919722727,
+          0.9888941537201241
+        ],
+        "policy_crosstab": {
+          "alpha": 0.1,
+          "cells": {
+            "alert": {
+              "1": {
+                "n": 49,
+                "precision": 0.2857142857142857
+              },
+              "0": {
+                "n": 0,
+                "precision": 0.0
+              },
+              "01": {
+                "n": 0,
+                "precision": 0.0
+              },
+              "empty": {
+                "n": 0,
+                "precision": 0.0
+              }
+            },
+            "no_alert": {
+              "1": {
+                "n": 532,
+                "precision": 0.015037593984962405
+              },
+              "0": {
+                "n": 26457,
+                "precision": 0.0
+              },
+              "01": {
+                "n": 19962,
+                "precision": 0.00040076144674882274
+              },
+              "empty": {
+                "n": 0,
+                "precision": 0.0
+              }
+            }
+          },
+          "n_alerts": 49,
+          "n_uncertain_alerts": 0,
+          "n_monitor": 532,
+          "uncertain_alert_rate": 0.0
+        }
+      },
+      "0.2": {
+        "thresholds": {
+          "alpha": 0.2,
+          "k1": 64,
+          "k0": 11735,
+          "t1": 0.4634739481800199,
+          "t0": 0.4634739481800199
+        },
+        "coverage": {
+          "n": 47000,
+          "n_pos": 30,
+          "n_neg": 46970,
+          "marginal_coverage": 0.9881063829787234,
+          "pos_coverage": 1.0,
+          "neg_coverage": 0.9880987864594422,
+          "set_size_dist": {
+            "singleton1": 0.012361702127659574,
+            "singleton0": 0.5629148936170213,
+            "ambiguous": 0.4247234042553191,
+            "empty": 0.0,
+            "mean_size": 1.4247234042553192
+          },
+          "positive_prediction_rate": 0.4370851063829787,
+          "positive_inclusion_count": 20543
+        },
+        "pos_coverage_wilson90": [
+          0.9172756918749007,
+          0.9999999999999999
+        ],
+        "neg_coverage_wilson90": [
+          0.9872471919722727,
+          0.9888941537201241
+        ],
+        "policy_crosstab": {
+          "alpha": 0.2,
+          "cells": {
+            "alert": {
+              "1": {
+                "n": 49,
+                "precision": 0.2857142857142857
+              },
+              "0": {
+                "n": 0,
+                "precision": 0.0
+              },
+              "01": {
+                "n": 0,
+                "precision": 0.0
+              },
+              "empty": {
+                "n": 0,
+                "precision": 0.0
+              }
+            },
+            "no_alert": {
+              "1": {
+                "n": 532,
+                "precision": 0.015037593984962405
+              },
+              "0": {
+                "n": 26457,
+                "precision": 0.0
+              },
+              "01": {
+                "n": 19962,
+                "precision": 0.00040076144674882274
+              },
+              "empty": {
+                "n": 0,
+                "precision": 0.0
+              }
+            }
+          },
+          "n_alerts": 49,
+          "n_uncertain_alerts": 0,
+          "n_monitor": 532,
+          "uncertain_alert_rate": 0.0
+        }
+      }
+    }
+  },
+  "decision": {
+    "decision": "ACCEPT",
+    "reasons": {
+      "D1": "TEST positive coverage 1.000 >= 0.85 and Wilson LB 0.917 >= 0.75",
+      "D2": "TEST negative coverage 0.988 >= 0.9",
+      "D3": "usefulness: uncertain alerts 0 (gap 0.684), monitor rows 765",
+      "D4": "all 4 windows >= 0.7",
+      "D5": "inference 0.0543 s <= 2.0"
+    },
+    "rule": "D1-D5 documented rule; D3 failure alone downgrades ACCEPT to CONDITIONAL / DIAGNOSTIC ONLY"
+  },
+  "notes": "conformal layer is an uncertainty signal; the frozen alert policy is unchanged"
+}

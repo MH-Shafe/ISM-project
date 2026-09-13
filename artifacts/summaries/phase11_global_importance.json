@@ -1,0 +1,417 @@
+{
+  "phase": "11",
+  "scope": "TRAIN + CALIBRATION only; TEST not used for any analysis that could influence interpretation",
+  "calibration": {
+    "n": 59000,
+    "importance": {
+      "n": 59000,
+      "per_feature": {
+        "login_count": {
+          "mean_abs": 0.21084755399702781,
+          "share_abs": 0.07246872249875866,
+          "mean_signed": -0.0064532092420531316,
+          "median": 0.0679309791330988,
+          "q25": 0.002719628200111769,
+          "q75": 0.12684889459293178,
+          "frac_nonzero": 1.0,
+          "frac_positive": 0.7523389830508475,
+          "rank": 4
+        },
+        "after_hours_login_count": {
+          "mean_abs": 0.13206887977857948,
+          "share_abs": 0.045392335922145484,
+          "mean_signed": 0.04575420820585264,
+          "median": 0.09891233693676002,
+          "q25": -0.03129108889817198,
+          "q75": 0.09891233693676002,
+          "frac_nonzero": 1.0,
+          "frac_positive": 0.619864406779661,
+          "rank": 5
+        },
+        "usb_connection_count": {
+          "mean_abs": 0.22217321542878946,
+          "share_abs": 0.0763613747959003,
+          "mean_signed": -0.06713406256998586,
+          "median": -0.08761932263662216,
+          "q25": -0.22654802334545154,
+          "q75": 0.0027192719160559578,
+          "frac_nonzero": 1.0,
+          "frac_positive": 0.4564237288135593,
+          "rank": 2
+        },
+        "file_access_count": {
+          "mean_abs": 0.2205230462966648,
+          "share_abs": 0.0757942083922832,
+          "mean_signed": 0.026943334229634075,
+          "median": 0.11303198020834683,
+          "q25": 0.10245903513758838,
+          "q75": 0.13092970799761658,
+          "frac_nonzero": 1.0,
+          "frac_positive": 0.9365762711864407,
+          "rank": 3
+        },
+        "sensitive_file_access_count": {
+          "mean_abs": 0.08781338126772807,
+          "share_abs": 0.030181633308671834,
+          "mean_signed": 0.011664105732302806,
+          "median": 0.035107034575609056,
+          "q25": 0.035107034575609056,
+          "q75": 0.04419471517894681,
+          "frac_nonzero": 1.0,
+          "frac_positive": 0.9478474576271186,
+          "rank": 7
+        },
+        "http_activity_count": {
+          "mean_abs": 1.4210165303194708,
+          "share_abs": 0.48840619988089706,
+          "mean_signed": 0.15968717125346496,
+          "median": -0.40960202967095466,
+          "q25": -1.1112206508063427,
+          "q75": 2.1230614416747655,
+          "frac_nonzero": 1.0,
+          "frac_positive": 0.39916949152542375,
+          "rank": 0
+        },
+        "unique_device_count": {
+          "mean_abs": 0.09410682234056456,
+          "share_abs": 0.03234470148766577,
+          "mean_signed": 0.01456687180236947,
+          "median": 0.048762693568352014,
+          "q25": 0.04433880325665914,
+          "q75": 0.06505617387080291,
+          "frac_nonzero": 1.0,
+          "frac_positive": 0.946322033898305,
+          "rank": 6
+        },
+        "unusual_access_count": {
+          "mean_abs": 0.03173402644378618,
+          "share_abs": 0.010907047829236034,
+          "mean_signed": 0.0013309951236801566,
+          "median": 0.016037715195835137,
+          "q25": 0.015080767590359223,
+          "q75": 0.016037715195835137,
+          "frac_nonzero": 1.0,
+          "frac_positive": 0.9749491525423729,
+          "rank": 10
+        },
+        "device_consistency_score": {
+          "mean_abs": 0.4059506090609796,
+          "share_abs": 0.1395260294869576,
+          "mean_signed": -0.16573937400429264,
+          "median": -0.38035832352656296,
+          "q25": -0.38035832352656296,
+          "q75": 0.1630057074049507,
+          "frac_nonzero": 1.0,
+          "frac_positive": 0.45603389830508473,
+          "rank": 1
+        },
+        "rare_device_usage_count": {
+          "mean_abs": 0.0369052499699897,
+          "share_abs": 0.012684407611672863,
+          "mean_signed": 0.018292721103525363,
+          "median": 0.02566962602264241,
+          "q25": 0.02082788756337604,
+          "q75": 0.027824258521655564,
+          "frac_nonzero": 1.0,
+          "frac_positive": 0.9847627118644068,
+          "rank": 9
+        },
+        "file_type_consistency_score": {
+          "mean_abs": 0.04445275479395518,
+          "share_abs": 0.015278499989209798,
+          "mean_signed": -0.0053113469527572305,
+          "median": 0.02459133657364172,
+          "q25": 0.014633182893422933,
+          "q75": 0.027161849724814426,
+          "frac_nonzero": 1.0,
+          "frac_positive": 0.8723559322033898,
+          "rank": 8
+        },
+        "rare_file_type_access_count": {
+          "mean_abs": 0.0019052517246750237,
+          "share_abs": 0.0006548387966013678,
+          "mean_signed": 0.0017598678226642395,
+          "median": 0.0017818917112175042,
+          "q25": 0.0017818917112175042,
+          "q75": 0.002092283217437826,
+          "frac_nonzero": 1.0,
+          "frac_positive": 0.9999152542372881,
+          "rank": 11
+        }
+      },
+      "ranking_mean_abs": [
+        "http_activity_count",
+        "device_consistency_score",
+        "usb_connection_count",
+        "file_access_count",
+        "login_count",
+        "after_hours_login_count",
+        "unique_device_count",
+        "sensitive_file_access_count",
+        "file_type_consistency_score",
+        "rare_device_usage_count",
+        "unusual_access_count",
+        "rare_file_type_access_count"
+      ]
+    },
+    "gain_vs_explanation": {
+      "kendall_tau": 0.7272727272727273,
+      "gain_ranking": [
+        "usb_connection_count",
+        "http_activity_count",
+        "device_consistency_score",
+        "sensitive_file_access_count",
+        "login_count",
+        "file_access_count",
+        "after_hours_login_count",
+        "file_type_consistency_score",
+        "unique_device_count",
+        "unusual_access_count",
+        "rare_device_usage_count",
+        "rare_file_type_access_count"
+      ],
+      "explanation_ranking": [
+        "http_activity_count",
+        "device_consistency_score",
+        "usb_connection_count",
+        "file_access_count",
+        "login_count",
+        "after_hours_login_count",
+        "unique_device_count",
+        "sensitive_file_access_count",
+        "file_type_consistency_score",
+        "rare_device_usage_count",
+        "unusual_access_count",
+        "rare_file_type_access_count"
+      ],
+      "delta_rank_expl_vs_gain": {
+        "http_activity_count": -1,
+        "device_consistency_score": -1,
+        "usb_connection_count": 2,
+        "file_access_count": -2,
+        "login_count": 0,
+        "after_hours_login_count": -1,
+        "unique_device_count": -2,
+        "sensitive_file_access_count": 4,
+        "file_type_consistency_score": 1,
+        "rare_device_usage_count": -1,
+        "unusual_access_count": 1,
+        "rare_file_type_access_count": 0
+      }
+    }
+  },
+  "train": {
+    "n": 395000,
+    "importance": {
+      "n": 395000,
+      "per_feature": {
+        "login_count": {
+          "mean_abs": 0.2248045896196211,
+          "share_abs": 0.07604151181158302,
+          "mean_signed": -0.0017147638770278217,
+          "median": 0.0679309791330988,
+          "q25": -0.039496205575944375,
+          "q75": 0.15627246683272292,
+          "frac_nonzero": 1.0,
+          "frac_positive": 0.7413493670886075,
+          "rank": 4
+        },
+        "after_hours_login_count": {
+          "mean_abs": 0.13740351785776136,
+          "share_abs": 0.04647757078186484,
+          "mean_signed": 0.0481829172671374,
+          "median": 0.09891233693676002,
+          "q25": -0.03129108889817198,
+          "q75": 0.09891233693676002,
+          "frac_nonzero": 1.0,
+          "frac_positive": 0.6115341772151899,
+          "rank": 5
+        },
+        "usb_connection_count": {
+          "mean_abs": 0.24998500787419156,
+          "share_abs": 0.08455894054987242,
+          "mean_signed": -0.04316511674538116,
+          "median": -0.12082342674593209,
+          "q25": -0.22654802334545154,
+          "q75": 0.0027192719160559578,
+          "frac_nonzero": 1.0,
+          "frac_positive": 0.439873417721519,
+          "rank": 2
+        },
+        "file_access_count": {
+          "mean_abs": 0.22725058989141828,
+          "share_abs": 0.07686888619425783,
+          "mean_signed": 0.025359184509606145,
+          "median": 0.11911222287792851,
+          "q25": 0.10245903513758838,
+          "q75": 0.13705016196836242,
+          "frac_nonzero": 1.0,
+          "frac_positive": 0.9329417721518988,
+          "rank": 3
+        },
+        "sensitive_file_access_count": {
+          "mean_abs": 0.09514969342551716,
+          "share_abs": 0.032184959162655194,
+          "mean_signed": 0.016462050515176144,
+          "median": 0.035107034575609056,
+          "q25": 0.035107034575609056,
+          "q75": 0.044376547170652585,
+          "frac_nonzero": 1.0,
+          "frac_positive": 0.9486708860759494,
+          "rank": 7
+        },
+        "http_activity_count": {
+          "mean_abs": 1.3708964751193262,
+          "share_abs": 0.46371402239443055,
+          "mean_signed": 0.09921081181745044,
+          "median": -0.5245529012835609,
+          "q25": -1.1087562210597917,
+          "q75": 2.1230614416747655,
+          "frac_nonzero": 1.0,
+          "frac_positive": 0.37559493670886074,
+          "rank": 0
+        },
+        "unique_device_count": {
+          "mean_abs": 0.10154871710615203,
+          "share_abs": 0.03434946761693956,
+          "mean_signed": 0.004347992996571591,
+          "median": 0.048762693568352014,
+          "q25": 0.03751173883991783,
+          "q75": 0.06505617387080291,
+          "frac_nonzero": 1.0,
+          "frac_positive": 0.935232911392405,
+          "rank": 6
+        },
+        "unusual_access_count": {
+          "mean_abs": 0.03517280512479951,
+          "share_abs": 0.011897414020191826,
+          "mean_signed": -0.002518059917117671,
+          "median": 0.016037715195835137,
+          "q25": 0.014929305128531719,
+          "q75": 0.016037715195835137,
+          "frac_nonzero": 1.0,
+          "frac_positive": 0.9660708860759494,
+          "rank": 10
+        },
+        "device_consistency_score": {
+          "mean_abs": 0.41661751994274904,
+          "share_abs": 0.1409233953685877,
+          "mean_signed": -0.14155727498703144,
+          "median": -0.09333786159824203,
+          "q25": -0.38035832352656296,
+          "q75": 0.1987091961403516,
+          "frac_nonzero": 1.0,
+          "frac_positive": 0.4818,
+          "rank": 1
+        },
+        "rare_device_usage_count": {
+          "mean_abs": 0.04714452171343699,
+          "share_abs": 0.01594691954817125,
+          "mean_signed": 0.005670344026900683,
+          "median": 0.02379124326561332,
+          "q25": 0.020463685882661235,
+          "q75": 0.027824258521655564,
+          "frac_nonzero": 1.0,
+          "frac_positive": 0.9729088607594937,
+          "rank": 8
+        },
+        "file_type_consistency_score": {
+          "mean_abs": 0.04655902182023456,
+          "share_abs": 0.015748870668831343,
+          "mean_signed": -0.008129522177710196,
+          "median": 0.024471133703777237,
+          "q25": 0.01372715855154152,
+          "q75": 0.027161849724814426,
+          "frac_nonzero": 1.0,
+          "frac_positive": 0.8632886075949368,
+          "rank": 9
+        },
+        "rare_file_type_access_count": {
+          "mean_abs": 0.0038078901896542966,
+          "share_abs": 0.0012880418826134831,
+          "mean_signed": -0.00015510938951895706,
+          "median": 0.001790741123187745,
+          "q25": 0.0017818917112175042,
+          "q75": 0.002092283217437826,
+          "frac_nonzero": 1.0,
+          "frac_positive": 0.9976177215189873,
+          "rank": 11
+        }
+      },
+      "ranking_mean_abs": [
+        "http_activity_count",
+        "device_consistency_score",
+        "usb_connection_count",
+        "file_access_count",
+        "login_count",
+        "after_hours_login_count",
+        "unique_device_count",
+        "sensitive_file_access_count",
+        "rare_device_usage_count",
+        "file_type_consistency_score",
+        "unusual_access_count",
+        "rare_file_type_access_count"
+      ]
+    },
+    "gain_vs_explanation": {
+      "kendall_tau": 0.696969696969697,
+      "gain_ranking": [
+        "usb_connection_count",
+        "http_activity_count",
+        "device_consistency_score",
+        "sensitive_file_access_count",
+        "login_count",
+        "file_access_count",
+        "after_hours_login_count",
+        "file_type_consistency_score",
+        "unique_device_count",
+        "unusual_access_count",
+        "rare_device_usage_count",
+        "rare_file_type_access_count"
+      ],
+      "explanation_ranking": [
+        "http_activity_count",
+        "device_consistency_score",
+        "usb_connection_count",
+        "file_access_count",
+        "login_count",
+        "after_hours_login_count",
+        "unique_device_count",
+        "sensitive_file_access_count",
+        "rare_device_usage_count",
+        "file_type_consistency_score",
+        "unusual_access_count",
+        "rare_file_type_access_count"
+      ],
+      "delta_rank_expl_vs_gain": {
+        "http_activity_count": -1,
+        "device_consistency_score": -1,
+        "usb_connection_count": 2,
+        "file_access_count": -2,
+        "login_count": 0,
+        "after_hours_login_count": -1,
+        "unique_device_count": -2,
+        "sensitive_file_access_count": 4,
+        "rare_device_usage_count": -2,
+        "file_type_consistency_score": 2,
+        "unusual_access_count": 1,
+        "rare_file_type_access_count": 0
+      }
+    }
+  },
+  "gain_importance_reference": {
+    "login_count": 684320.0752010345,
+    "after_hours_login_count": 211210.619972229,
+    "usb_connection_count": 12114925.061206818,
+    "file_access_count": 361758.43126296997,
+    "sensitive_file_access_count": 972292.4424285889,
+    "http_activity_count": 6941284.47032547,
+    "unique_device_count": 60056.4684677124,
+    "unusual_access_count": 29835.35276222229,
+    "device_consistency_score": 1193345.779663086,
+    "rare_device_usage_count": 27151.93349838257,
+    "file_type_consistency_score": 62770.36652755737,
+    "rare_file_type_access_count": 5682.397407531738
+  },
+  "note": "rank agreement between gain and explanation importance is descriptive evidence, not proof of correctness of either"
+}

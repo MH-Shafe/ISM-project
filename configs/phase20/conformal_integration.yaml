@@ -1,0 +1,56 @@
+# Phase 20: Conformal Integration Verification
+# Frozen conformal layer from Phase 10, verified against authoritative artifacts.
+
+method: mondrian_split_conformal
+alpha: 0.05
+decision: ACCEPT
+decision_source: reports/artifacts/phase10_decision.json
+
+# Conformal fit (from reports/artifacts/phase10_fit.json)
+fit:
+  method: mondrian_split_conformal
+  n1: 323  # positive calibration sample size
+  n0: 58677  # negative calibration sample size
+
+# Inclusion thresholds at alpha=0.05 (from reports/artifacts/phase10_calibration.json)
+thresholds:
+  alpha: 0.05
+  t1: 0.0046536002164601275  # class-1 inclusion: score >= t1
+  t0: 0.4634739481800199    # class-0 inclusion: score <= t0
+  k1: 16                     # floor(0.05 * 324)
+  k0: 2933                   # floor(0.05 * 58678)
+
+# Prediction set semantics
+prediction_sets:
+  "{1}": "confident positive (score >= alert_threshold)"
+  "{0}": "confident negative (score < t1)"
+  "{0,1}": "ambiguous (t1 <= score < alert_threshold)"
+  "{}": "insufficient evidence (never occurs at alpha=0.05 in this dataset)"
+
+# D1-D5 verification (from reports/artifacts/phase10_decision.json)
+d1_d5:
+  D1_pos_coverage: 1.0  # >= 0.85 PASS
+  D1_wilson_lb: 0.917   # >= 0.75 PASS
+  D2_neg_coverage: 0.988  # >= 0.90 PASS
+  D3_usefulness: "monitor rows 765 >= 10 PASS"
+  D4_window_coverage: "all 4 windows >= 0.70 PASS"
+  D5_inference_time: "0.054s <= 2.0s PASS"
+
+# Production risk-level mapping (Phase 20, using Phase 11 validated levels)
+risk_levels:
+  ALERT:
+    condition: "score >= 0.9186015432508062"
+    confidence: 0.95
+    action: "escalate_to_incident_response"
+  BORDERLINE:
+    condition: "0.8686015432508062 <= score < 0.9186015432508062"
+    confidence: 0.90
+    action: "queue_for_analyst_review"
+  MONITOR:
+    condition: "0.4634739481800199 <= score < 0.8686015432508062"
+    confidence: 0.90
+    action: "add_to_watchlist"
+  NON-ALERT:
+    condition: "score < 0.4634739481800199"
+    confidence: 0.95
+    action: "no_action_required"

@@ -1,0 +1,90 @@
+# Phase 20: Final Feature Schema — frozen production model lgbm-graph-v1
+# All features are frozen since Phase 7. No modifications allowed.
+# Source of truth: reports/artifacts/phase7_freeze_lgbm-graph-v1.json
+
+model_name: lgbm-graph-v1
+feature_version: "v2 (8 behavioral + 4 graph)"
+n_features: 12
+split_strategy: chronological
+
+features:
+  # Behavioral features (8)
+  - name: login_count
+    type: behavioral
+    source: logon.csv
+    definition: "Number of rows with activity='Logon' per user-day."
+    status: defined
+
+  - name: after_hours_login_count
+    type: behavioral
+    source: logon.csv
+    definition: "Number of 'Logon' rows per user-day whose hour is < 8 or >= 18."
+    status: defined
+
+  - name: usb_connection_count
+    type: behavioral
+    source: device.csv
+    definition: "Number of rows with activity='Connect' per user-day."
+    status: defined
+
+  - name: file_access_count
+    type: behavioral
+    source: file.csv
+    definition: "Number of file rows per user-day."
+    status: defined
+
+  - name: sensitive_file_access_count
+    type: behavioral
+    source: file.csv
+    definition: "Number of file rows per user-day with sensitive magic-byte prefix."
+    status: defined
+
+  - name: http_activity_count
+    type: behavioral
+    source: http.csv
+    definition: "Number of http rows per user-day."
+    status: defined
+
+  - name: unique_device_count
+    type: behavioral
+    source: logon.csv
+    definition: "Number of distinct pc values in logon rows per user-day."
+    status: defined
+
+  - name: unusual_access_count
+    type: behavioral
+    source: logon.csv
+    definition: "Number of Logon events per user-day on a PC with no Logon in trailing 28-day window."
+    status: defined
+
+  # Graph features (4)
+  - name: device_consistency_score
+    type: graph
+    source: logon.csv
+    definition: "Jaccard similarity between PCs used on day d and PCs used strictly before d."
+    status: defined
+
+  - name: rare_device_usage_count
+    type: graph
+    source: logon.csv
+    definition: "Number of PCs used on day d that user has never used strictly before d."
+    status: defined
+
+  - name: file_type_consistency_score
+    type: graph
+    source: file.csv
+    definition: "Jaccard similarity between file content types on day d and types accessed strictly before d."
+    status: defined
+
+  - name: rare_file_type_access_count
+    type: graph
+    source: file.csv
+    definition: "Number of file rows on day d whose content type user has never accessed strictly before d."
+    status: defined
+
+# Rejected features (Phase 7 decision)
+rejected_features:
+  - name: department_file_type_mismatch_count
+    reason: "Zero gain in all 5 seeds, ~0.011% non-zero TRAIN+CAL rows, single-feature CAL AUC-ROC=0.5, removal delta exactly 0.0."
+    decision: REJECT
+    phase: 7

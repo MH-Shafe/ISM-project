@@ -1,0 +1,892 @@
+{
+  "artifacts": [
+    "phase14_split.json",
+    "phase14_model.txt",
+    "phase14_model_record.json",
+    "phase14_calibration.json",
+    "phase14_test_predictions.parquet",
+    "phase14_test_metrics.json",
+    "phase14_user_diagnostics.json",
+    "phase14_bootstrap.json",
+    "phase14_scenario.json",
+    "phase14_cost.json",
+    "phase14.log",
+    "phase14_manifest.json"
+  ],
+  "auxiliary_model": "lgbm-graph-v1-uhold",
+  "blocks": {
+    "CAL": {
+      "malicious_users": 15,
+      "n_users": 108,
+      "positives": 379,
+      "rows": 54108
+    },
+    "TEST": {
+      "malicious_users": 15,
+      "n_users": 108,
+      "positives": 476,
+      "rows": 54108
+    },
+    "TRAIN": {
+      "malicious_users": 40,
+      "n_users": 784,
+      "positives": 1037,
+      "rows": 392784
+    }
+  },
+  "bootstrap": {
+    "alpha": 0.1,
+    "n_boot": 1000,
+    "note": "user-block is the primary uncertainty statement for user-generalization claims; row-level kept for comparability (optimistic given within-user correlation)",
+    "row_level": {
+      "auc_pr": {
+        "ci_high": 0.4205585370810163,
+        "ci_low": 0.3361667374101195,
+        "mean": 0.3763096522425412,
+        "metric": "auc_pr",
+        "n_boot": 1000,
+        "n_skipped": 0,
+        "n_valid": 1000
+      },
+      "auc_roc": {
+        "ci_high": 0.8140119202050805,
+        "ci_low": 0.7589231705468642,
+        "mean": 0.7867376786135202,
+        "metric": "auc_roc",
+        "n_boot": 1000,
+        "n_skipped": 0,
+        "n_valid": 1000
+      }
+    },
+    "seed": 42,
+    "user_block": {
+      "auc_pr": {
+        "ci_high": 0.5047776334038507,
+        "ci_low": 0.23584899113162022,
+        "mean": 0.37790780587274875,
+        "method": "user-block percentile bootstrap (resample TEST users with replacement, pool rows, recompute)",
+        "metric": "auc_pr",
+        "n_boot": 1000,
+        "n_skipped": 0,
+        "n_users": 108,
+        "n_valid": 1000
+      },
+      "auc_roc": {
+        "ci_high": 0.9014994573586621,
+        "ci_low": 0.6664487491626162,
+        "mean": 0.7871418016592746,
+        "method": "user-block percentile bootstrap (resample TEST users with replacement, pool rows, recompute)",
+        "metric": "auc_roc",
+        "n_boot": 1000,
+        "n_skipped": 0,
+        "n_users": 108,
+        "n_valid": 1000
+      }
+    }
+  },
+  "calibration": {
+    "at_secondary_threshold": {
+      "alert_rate": 0.0023471575367782953,
+      "balanced_accuracy": 0.6423033978152156,
+      "f1": 0.42687747035573126,
+      "fn": 271,
+      "fnr": 0.7150395778364116,
+      "fp": 19,
+      "fpr": 0.00035362653315714046,
+      "mcc": 0.4905089387590998,
+      "n_alerts": 127,
+      "precision": 0.8503937007874016,
+      "recall": 0.2849604221635884,
+      "threshold": 0.9837865316173778,
+      "tn": 53710,
+      "tp": 108
+    },
+    "best_iteration": 214,
+    "classification": {
+      "auc_pr": 0.3344387496042146,
+      "auc_roc": 0.7355124228200639,
+      "n": 54108,
+      "positives": 379
+    },
+    "early_stopping_curve": {
+      "note": "curve summary not retained; best_iteration recorded as outcome"
+    },
+    "positives": 379,
+    "rows": 54108,
+    "secondary_f1_cal": 0.42687747035573126,
+    "secondary_threshold": 0.9837865316173778
+  },
+  "dataset": "CERT r4.2",
+  "determinism": {
+    "bit_identical": true,
+    "runs": 2
+  },
+  "evidence_labels": {
+    "TEST metrics": "OBSERVED (auxiliary TEST, evaluated once per finalized protocol)",
+    "allocation": "OBSERVED (frozen label column; pre-registered rule)",
+    "block counts": "OBSERVED (asserted vs specification Section 6)",
+    "model": "OBSERVED (auxiliary lgbm-graph-v1-uhold, seed 42; evaluation-only)",
+    "scenario mapping": "OBSERVED at execution from the answer key (was NOT VERIFIED before execution)"
+  },
+  "experiment_id": "phase14-user-holdout-generalization",
+  "frozen_system": {
+    "best_iteration_frozen": 186,
+    "features": [
+      "login_count",
+      "after_hours_login_count",
+      "usb_connection_count",
+      "file_access_count",
+      "sensitive_file_access_count",
+      "http_activity_count",
+      "unique_device_count",
+      "unusual_access_count",
+      "device_consistency_score",
+      "rare_device_usage_count",
+      "file_type_consistency_score",
+      "rare_file_type_access_count"
+    ],
+    "lightgbm": "4.6.0",
+    "model": "lgbm-graph-v1",
+    "seed": 42,
+    "threshold": 0.9186015432508062
+  },
+  "input_md5": "9a3b188573bb953416981dfea3379def",
+  "interpretation": {
+    "auc_pr_delta_rel_vs_chronological": 0.403185,
+    "auc_pr_label": "inconclusive",
+    "auc_roc_delta_vs_chronological": -0.152643,
+    "auc_roc_label": "materially worse",
+    "band_rule": "AUC-ROC within +/-0.02 comparable; worse by >0.05 materially worse; AUC-PR within +/-20% relative comparable, worse by >40% relative materially worse; coverage 12+/8-11/<=7 of 15",
+    "coverage_label": "high user-level coverage",
+    "no_production_decision": "Phase 14 makes no production decision; operating-point metrics are cohort-conditional and not directly comparable to the chronological record"
+  },
+  "model": {
+    "best_iteration": 214,
+    "calibration": {
+      "malicious": 379,
+      "rows": 54108
+    },
+    "early_stopping": "user-disjoint CAL auc, patience 100, up to 3000 rounds",
+    "features": [
+      "login_count",
+      "after_hours_login_count",
+      "usb_connection_count",
+      "file_access_count",
+      "sensitive_file_access_count",
+      "http_activity_count",
+      "unique_device_count",
+      "unusual_access_count",
+      "device_consistency_score",
+      "rare_device_usage_count",
+      "file_type_consistency_score",
+      "rare_file_type_access_count"
+    ],
+    "model_bytes": 750807,
+    "model_name": "lgbm-graph-v1-uhold",
+    "params": {
+      "bagging_fraction": 0.8,
+      "bagging_freq": 1,
+      "feature_fraction": 0.8,
+      "learning_rate": 0.03,
+      "metric": "auc",
+      "min_data_in_leaf": 100,
+      "num_leaves": 31,
+      "objective": "binary",
+      "scale_pos_weight": 377.7695274831244,
+      "seed": 42,
+      "verbose": -1
+    },
+    "train": {
+      "malicious": 1037,
+      "rows": 392784
+    }
+  },
+  "objective": "user-level holdout generalization (auxiliary, evaluation-only)",
+  "phase": "14",
+  "scenario": {
+    "CAL": {
+      "1": {
+        "n_malicious_rows": 31,
+        "n_users": 3507
+      },
+      "2": {
+        "n_malicious_rows": 344,
+        "n_users": 3006
+      },
+      "3": {
+        "n_malicious_rows": 4,
+        "n_users": 1002
+      },
+      "recall_at_primary": {
+        "1": {
+          "n_malicious_rows": 31,
+          "n_users": 3507,
+          "recall": 0.2903225806451613
+        },
+        "2": {
+          "n_malicious_rows": 344,
+          "n_users": 3006,
+          "recall": 0.3633720930232558
+        },
+        "3": {
+          "n_malicious_rows": 4,
+          "n_users": 1002,
+          "recall": 0.25
+        }
+      },
+      "recall_at_secondary": {
+        "1": {
+          "n_malicious_rows": 31,
+          "n_users": 3507,
+          "recall": 0.1935483870967742
+        },
+        "2": {
+          "n_malicious_rows": 344,
+          "n_users": 3006,
+          "recall": 0.29651162790697677
+        },
+        "3": {
+          "n_malicious_rows": 4,
+          "n_users": 1002,
+          "recall": 0.0
+        }
+      }
+    },
+    "TEST": {
+      "1": {
+        "n_malicious_rows": 30,
+        "n_users": 2004
+      },
+      "2": {
+        "n_malicious_rows": 440,
+        "n_users": 4008
+      },
+      "3": {
+        "n_malicious_rows": 6,
+        "n_users": 1503
+      },
+      "recall_at_primary": {
+        "1": {
+          "n_malicious_rows": 30,
+          "n_users": 2004,
+          "recall": 0.26666666666666666
+        },
+        "2": {
+          "n_malicious_rows": 440,
+          "n_users": 4008,
+          "recall": 0.44545454545454544
+        },
+        "3": {
+          "n_malicious_rows": 6,
+          "n_users": 1503,
+          "recall": 0.5
+        }
+      },
+      "recall_at_secondary": {
+        "1": {
+          "n_malicious_rows": 30,
+          "n_users": 2004,
+          "recall": 0.2
+        },
+        "2": {
+          "n_malicious_rows": 440,
+          "n_users": 4008,
+          "recall": 0.32045454545454544
+        },
+        "3": {
+          "n_malicious_rows": 6,
+          "n_users": 1503,
+          "recall": 0.16666666666666666
+        }
+      }
+    },
+    "TRAIN": {
+      "1": {
+        "n_malicious_rows": 135,
+        "n_users": 9519
+      },
+      "2": {
+        "n_malicious_rows": 892,
+        "n_users": 8016
+      },
+      "3": {
+        "n_malicious_rows": 10,
+        "n_users": 2505
+      }
+    }
+  },
+  "test_evaluation_policy": "auxiliary user-holdout TEST evaluated once per finalized protocol; the authoritative chronological TEST is never re-evaluated",
+  "test_metrics": {
+    "alert_rate": {
+      "per_calendar_day": 2.0479041916167664,
+      "per_user_day": 0.018962075848303395
+    },
+    "alerts_per_user": {
+      "max": 272.0,
+      "mean": 9.5,
+      "median": 0.0
+    },
+    "at_primary_threshold": {
+      "alert_rate": 0.018962075848303395,
+      "balanced_accuracy": 0.7098016078448086,
+      "f1": 0.2756324900133156,
+      "fn": 269,
+      "fnr": 0.5651260504201681,
+      "fp": 819,
+      "fpr": 0.015270733890214798,
+      "mcc": 0.2872810379712531,
+      "n_alerts": 1026,
+      "precision": 0.20175438596491227,
+      "recall": 0.43487394957983194,
+      "threshold": 0.9186015432508062,
+      "tn": 52813,
+      "tp": 207
+    },
+    "at_secondary_threshold": {
+      "alert_rate": 0.0035299770828712946,
+      "balanced_accuracy": 0.6550613048023506,
+      "f1": 0.4437781109445278,
+      "fn": 328,
+      "fnr": 0.6890756302521008,
+      "fp": 43,
+      "fpr": 0.0008017601431980906,
+      "mcc": 0.4882804757418295,
+      "n_alerts": 191,
+      "precision": 0.774869109947644,
+      "recall": 0.31092436974789917,
+      "threshold": 0.9837865316173778,
+      "tn": 53589,
+      "tp": 148
+    },
+    "classification": {
+      "auc_pr": 0.3757395445913874,
+      "auc_roc": 0.786513147174144,
+      "n": 54108,
+      "positives": 476
+    },
+    "gini_over_alerted_users": 0.7071593124224704,
+    "n_days": 501,
+    "n_malicious_users": 15,
+    "n_positives": 476,
+    "n_rows": 54108,
+    "primary_threshold_note": "frozen production threshold applied as an immutable reference operating point",
+    "secondary_threshold_note": "user-disjoint CAL best-F1 threshold; descriptive only, selects nothing",
+    "top_k": {
+      "precision_at_10": 1.0,
+      "precision_at_100": 0.95,
+      "precision_at_30": 1.0,
+      "precision_at_50": 1.0,
+      "recall_at_10": 0.02100840336134454,
+      "recall_at_100": 0.19957983193277312,
+      "recall_at_30": 0.06302521008403361,
+      "recall_at_50": 0.10504201680672269
+    }
+  },
+  "user_diagnostics": {
+    "alert_concentration": {
+      "gini": 0.9403472673453179,
+      "n_alerted_users": 22,
+      "n_alerts_total": 1026
+    },
+    "coverage": {
+      "detected": 13,
+      "frac": 0.8666666666666667,
+      "total": 15,
+      "wilson_90": [
+        0.6884619319739703,
+        0.9328124179785935
+      ]
+    },
+    "detection_delay_days": {
+      "max": 0,
+      "median": -229.0,
+      "min": -406,
+      "n_users_with_alert": 13
+    },
+    "first_tercile_detection": {
+      "n_users": 2,
+      "users": [
+        "JGT0221",
+        "JLM0364"
+      ]
+    },
+    "first_week_detection": {
+      "n_users": 2,
+      "of_malicious": 15,
+      "users": [
+        "JGT0221",
+        "JLM0364"
+      ]
+    },
+    "fully_detected": {
+      "n_users": 0,
+      "users": []
+    },
+    "fully_detected_users": [],
+    "n_malicious_test_users": 15,
+    "n_test_users": 108,
+    "per_user": [
+      {
+        "activity_tercile": "low",
+        "detected": true,
+        "detected_first_tercile": false,
+        "detected_first_week": false,
+        "detection_delay_days": -160,
+        "first_alert_day": "2010-05-07",
+        "first_alert_positive_rank": null,
+        "fully_detected": false,
+        "length_class": "short",
+        "max_score": 0.994183368337513,
+        "n_alerts": 6,
+        "n_positive_days": 2,
+        "onset": "2010-10-14",
+        "scenario": 3,
+        "temporal_half": "2010 H2",
+        "user": "CCA0046"
+      },
+      {
+        "activity_tercile": "low",
+        "detected": true,
+        "detected_first_tercile": false,
+        "detected_first_week": false,
+        "detection_delay_days": -355,
+        "first_alert_day": "2010-01-06",
+        "first_alert_positive_rank": null,
+        "fully_detected": false,
+        "length_class": "long",
+        "max_score": 0.9992961755548896,
+        "n_alerts": 154,
+        "n_positive_days": 57,
+        "onset": "2010-12-27",
+        "scenario": 2,
+        "temporal_half": "2010 H2",
+        "user": "CCL0068"
+      },
+      {
+        "activity_tercile": "low",
+        "detected": true,
+        "detected_first_tercile": false,
+        "detected_first_week": false,
+        "detection_delay_days": -406,
+        "first_alert_day": "2010-01-08",
+        "first_alert_positive_rank": null,
+        "fully_detected": false,
+        "length_class": "long",
+        "max_score": 0.99951796649064,
+        "n_alerts": 272,
+        "n_positive_days": 56,
+        "onset": "2011-02-18",
+        "scenario": 2,
+        "temporal_half": "2011",
+        "user": "CQW0652"
+      },
+      {
+        "activity_tercile": "low",
+        "detected": true,
+        "detected_first_tercile": false,
+        "detected_first_week": false,
+        "detection_delay_days": -280,
+        "first_alert_day": "2010-01-11",
+        "first_alert_positive_rank": null,
+        "fully_detected": false,
+        "length_class": "long",
+        "max_score": 0.9991906104607499,
+        "n_alerts": 124,
+        "n_positive_days": 58,
+        "onset": "2010-10-18",
+        "scenario": 2,
+        "temporal_half": "2010 H2",
+        "user": "EDB0714"
+      },
+      {
+        "activity_tercile": "low",
+        "detected": true,
+        "detected_first_tercile": false,
+        "detected_first_week": false,
+        "detection_delay_days": -230,
+        "first_alert_day": "2010-01-13",
+        "first_alert_positive_rank": null,
+        "fully_detected": false,
+        "length_class": "long",
+        "max_score": 0.9991360333530137,
+        "n_alerts": 110,
+        "n_positive_days": 59,
+        "onset": "2010-08-31",
+        "scenario": 2,
+        "temporal_half": "2010 H2",
+        "user": "HXL0968"
+      },
+      {
+        "activity_tercile": "low",
+        "detected": true,
+        "detected_first_tercile": false,
+        "detected_first_week": false,
+        "detection_delay_days": -354,
+        "first_alert_day": "2010-01-07",
+        "first_alert_positive_rank": null,
+        "fully_detected": false,
+        "length_class": "long",
+        "max_score": 0.9985863403866128,
+        "n_alerts": 162,
+        "n_positive_days": 53,
+        "onset": "2010-12-27",
+        "scenario": 2,
+        "temporal_half": "2010 H2",
+        "user": "IKR0401"
+      },
+      {
+        "activity_tercile": "low",
+        "detected": true,
+        "detected_first_tercile": true,
+        "detected_first_week": true,
+        "detection_delay_days": 0,
+        "first_alert_day": "2010-07-15",
+        "first_alert_positive_rank": 1,
+        "fully_detected": false,
+        "length_class": "short",
+        "max_score": 0.9600175796328233,
+        "n_alerts": 1,
+        "n_positive_days": 2,
+        "onset": "2010-07-15",
+        "scenario": 3,
+        "temporal_half": "2010 H2",
+        "user": "JGT0221"
+      },
+      {
+        "activity_tercile": "low",
+        "detected": false,
+        "detected_first_tercile": false,
+        "detected_first_week": false,
+        "detection_delay_days": null,
+        "first_alert_day": null,
+        "first_alert_positive_rank": null,
+        "fully_detected": false,
+        "length_class": "long",
+        "max_score": 0.49813941476022516,
+        "n_alerts": 0,
+        "n_positive_days": 48,
+        "onset": "2010-09-02",
+        "scenario": 2,
+        "temporal_half": "2010 H2",
+        "user": "JJM0203"
+      },
+      {
+        "activity_tercile": "low",
+        "detected": true,
+        "detected_first_tercile": true,
+        "detected_first_week": true,
+        "detection_delay_days": 0,
+        "first_alert_day": "2011-04-28",
+        "first_alert_positive_rank": 1,
+        "fully_detected": false,
+        "length_class": "short",
+        "max_score": 0.9436191775273416,
+        "n_alerts": 1,
+        "n_positive_days": 2,
+        "onset": "2011-04-28",
+        "scenario": 3,
+        "temporal_half": "2011",
+        "user": "JLM0364"
+      },
+      {
+        "activity_tercile": "low",
+        "detected": true,
+        "detected_first_tercile": false,
+        "detected_first_week": false,
+        "detection_delay_days": -2,
+        "first_alert_day": "2010-07-12",
+        "first_alert_positive_rank": null,
+        "fully_detected": false,
+        "length_class": "short",
+        "max_score": 0.9992322444812572,
+        "n_alerts": 4,
+        "n_positive_days": 8,
+        "onset": "2010-07-14",
+        "scenario": 1,
+        "temporal_half": "2010 H2",
+        "user": "JMB0308"
+      },
+      {
+        "activity_tercile": "low",
+        "detected": true,
+        "detected_first_tercile": false,
+        "detected_first_week": false,
+        "detection_delay_days": -5,
+        "first_alert_day": "2010-12-08",
+        "first_alert_positive_rank": null,
+        "fully_detected": false,
+        "length_class": "short",
+        "max_score": 0.9909501994740285,
+        "n_alerts": 4,
+        "n_positive_days": 6,
+        "onset": "2010-12-13",
+        "scenario": 1,
+        "temporal_half": "2010 H2",
+        "user": "MYD0978"
+      },
+      {
+        "activity_tercile": "low",
+        "detected": true,
+        "detected_first_tercile": false,
+        "detected_first_week": false,
+        "detection_delay_days": -4,
+        "first_alert_day": "2010-07-09",
+        "first_alert_positive_rank": null,
+        "fully_detected": false,
+        "length_class": "short",
+        "max_score": 0.9987421248162864,
+        "n_alerts": 3,
+        "n_positive_days": 8,
+        "onset": "2010-07-13",
+        "scenario": 1,
+        "temporal_half": "2010 H2",
+        "user": "RKD0604"
+      },
+      {
+        "activity_tercile": "low",
+        "detected": true,
+        "detected_first_tercile": false,
+        "detected_first_week": false,
+        "detection_delay_days": -283,
+        "first_alert_day": "2010-01-05",
+        "first_alert_positive_rank": null,
+        "fully_detected": false,
+        "length_class": "long",
+        "max_score": 0.9753020071603983,
+        "n_alerts": 3,
+        "n_positive_days": 56,
+        "onset": "2010-10-15",
+        "scenario": 2,
+        "temporal_half": "2010 H2",
+        "user": "TNM0961"
+      },
+      {
+        "activity_tercile": "low",
+        "detected": true,
+        "detected_first_tercile": false,
+        "detected_first_week": false,
+        "detection_delay_days": -229,
+        "first_alert_day": "2010-01-21",
+        "first_alert_positive_rank": null,
+        "fully_detected": false,
+        "length_class": "long",
+        "max_score": 0.9993880784202127,
+        "n_alerts": 46,
+        "n_positive_days": 53,
+        "onset": "2010-09-07",
+        "scenario": 2,
+        "temporal_half": "2010 H2",
+        "user": "VSS0154"
+      },
+      {
+        "activity_tercile": "low",
+        "detected": false,
+        "detected_first_tercile": false,
+        "detected_first_week": false,
+        "detection_delay_days": null,
+        "first_alert_day": null,
+        "first_alert_positive_rank": null,
+        "fully_detected": false,
+        "length_class": "short",
+        "max_score": 0.7264170873121546,
+        "n_alerts": 0,
+        "n_positive_days": 8,
+        "onset": "2011-02-24",
+        "scenario": 1,
+        "temporal_half": "2011",
+        "user": "WDD0366"
+      }
+    ],
+    "strata": {
+      "by_activity_tercile": {
+        "low": {
+          "detected": 13,
+          "detected_users": [
+            "CCA0046",
+            "CCL0068",
+            "CQW0652",
+            "EDB0714",
+            "HXL0968",
+            "IKR0401",
+            "JGT0221",
+            "JLM0364",
+            "JMB0308",
+            "MYD0978",
+            "RKD0604",
+            "TNM0961",
+            "VSS0154"
+          ],
+          "n_users": 15,
+          "users": [
+            "CCA0046",
+            "CCL0068",
+            "CQW0652",
+            "EDB0714",
+            "HXL0968",
+            "IKR0401",
+            "JGT0221",
+            "JJM0203",
+            "JLM0364",
+            "JMB0308",
+            "MYD0978",
+            "RKD0604",
+            "TNM0961",
+            "VSS0154",
+            "WDD0366"
+          ]
+        }
+      },
+      "by_length_class": {
+        "long": {
+          "detected": 7,
+          "detected_users": [
+            "CCL0068",
+            "CQW0652",
+            "EDB0714",
+            "HXL0968",
+            "IKR0401",
+            "TNM0961",
+            "VSS0154"
+          ],
+          "n_users": 8,
+          "users": [
+            "CCL0068",
+            "CQW0652",
+            "EDB0714",
+            "HXL0968",
+            "IKR0401",
+            "JJM0203",
+            "TNM0961",
+            "VSS0154"
+          ]
+        },
+        "short": {
+          "detected": 6,
+          "detected_users": [
+            "CCA0046",
+            "JGT0221",
+            "JLM0364",
+            "JMB0308",
+            "MYD0978",
+            "RKD0604"
+          ],
+          "n_users": 7,
+          "users": [
+            "CCA0046",
+            "JGT0221",
+            "JLM0364",
+            "JMB0308",
+            "MYD0978",
+            "RKD0604",
+            "WDD0366"
+          ]
+        }
+      },
+      "by_scenario": {
+        "1": {
+          "detected": 3,
+          "detected_users": [
+            "JMB0308",
+            "MYD0978",
+            "RKD0604"
+          ],
+          "n_users": 4,
+          "users": [
+            "JMB0308",
+            "MYD0978",
+            "RKD0604",
+            "WDD0366"
+          ]
+        },
+        "2": {
+          "detected": 7,
+          "detected_users": [
+            "CCL0068",
+            "CQW0652",
+            "EDB0714",
+            "HXL0968",
+            "IKR0401",
+            "TNM0961",
+            "VSS0154"
+          ],
+          "n_users": 8,
+          "users": [
+            "CCL0068",
+            "CQW0652",
+            "EDB0714",
+            "HXL0968",
+            "IKR0401",
+            "JJM0203",
+            "TNM0961",
+            "VSS0154"
+          ]
+        },
+        "3": {
+          "detected": 3,
+          "detected_users": [
+            "CCA0046",
+            "JGT0221",
+            "JLM0364"
+          ],
+          "n_users": 3,
+          "users": [
+            "CCA0046",
+            "JGT0221",
+            "JLM0364"
+          ]
+        }
+      },
+      "by_temporal_half": {
+        "2010 H2": {
+          "detected": 11,
+          "detected_users": [
+            "CCA0046",
+            "CCL0068",
+            "EDB0714",
+            "HXL0968",
+            "IKR0401",
+            "JGT0221",
+            "JMB0308",
+            "MYD0978",
+            "RKD0604",
+            "TNM0961",
+            "VSS0154"
+          ],
+          "n_users": 12,
+          "users": [
+            "CCA0046",
+            "CCL0068",
+            "EDB0714",
+            "HXL0968",
+            "IKR0401",
+            "JGT0221",
+            "JJM0203",
+            "JMB0308",
+            "MYD0978",
+            "RKD0604",
+            "TNM0961",
+            "VSS0154"
+          ]
+        },
+        "2011": {
+          "detected": 2,
+          "detected_users": [
+            "CQW0652",
+            "JLM0364"
+          ],
+          "n_users": 3,
+          "users": [
+            "CQW0652",
+            "JLM0364",
+            "WDD0366"
+          ]
+        }
+      }
+    },
+    "user_level_auc_roc": 0.9648745519713261,
+    "zero_detection_users": [
+      "JJM0203",
+      "WDD0366"
+    ]
+  }
+}

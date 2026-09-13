@@ -1,0 +1,149 @@
+# Phase 20: Dashboard-Ready Output Sample
+# Example output from the frozen decision engine.
+
+# Schema: see configs/phase20/output_schema.yaml
+
+sample_records:
+  - user: "AAA0001"
+    day: "2011-04-15"
+    ml_risk: 0.987654
+    risk_level: "ALERT"
+    confidence: 0.95
+    conformal_set: "{1}"
+    p1: 0.993827
+    p0: 0.000017
+    alert_flag: true
+    recommended_action: "escalate_to_incident_response"
+    urgency: "immediate"
+    rationale: "Score 0.9877 >= frozen alert threshold 0.9186"
+    trust_flags: ["new_device_count=1"]
+    n_trust_flags: 1
+    graph_features:
+      device_consistency_score: 0.65
+      rare_device_usage_count: 1
+      file_type_consistency_score: 0.85
+      rare_file_type_access_count: 0
+    top_reasons:
+      - feature: "usb_connection_count"
+        value: 12.0
+        contribution: 0.4523
+        direction: "increased"
+        definition: "Number of rows with activity='Connect' per user-day."
+      - feature: "unusual_access_count"
+        value: 3.0
+        contribution: 0.2341
+        direction: "increased"
+        definition: "Number of Logon events per user-day on a PC with no Logon in trailing 28-day window."
+      - feature: "http_activity_count"
+        value: 25.0
+        contribution: 0.1876
+        direction: "increased"
+        definition: "Number of http rows per user-day."
+
+  - user: "BBB0042"
+    day: "2011-05-01"
+    ml_risk: 0.512345
+    risk_level: "MONITOR"
+    confidence: 0.90
+    conformal_set: "{0,1}"
+    p1: 0.048765
+    p0: 0.951235
+    alert_flag: false
+    recommended_action: "add_to_watchlist"
+    urgency: "weekly"
+    rationale: "Score 0.5123 in monitor zone [0.4635, 0.8686)"
+    trust_flags: ["low_device_consistency"]
+    n_trust_flags: 1
+    graph_features:
+      device_consistency_score: 0.35
+      rare_device_usage_count: 0
+      file_type_consistency_score: 0.72
+      rare_file_type_access_count: 1
+    top_reasons:
+      - feature: "file_access_count"
+        value: 8.0
+        contribution: 0.1234
+        direction: "increased"
+        definition: "Number of file rows per user-day."
+      - feature: "device_consistency_score"
+        value: 0.35
+        contribution: -0.0876
+        direction: "decreased"
+        definition: "Jaccard similarity between PCs used on day d and PCs used strictly before d."
+      - feature: "login_count"
+        value: 3.0
+        contribution: 0.0234
+        direction: "increased"
+        definition: "Number of rows with activity='Logon' per user-day."
+
+  - user: "CCC0099"
+    day: "2011-04-20"
+    ml_risk: 0.003210
+    risk_level: "NON-ALERT"
+    confidence: 0.95
+    conformal_set: "{0}"
+    p1: 0.032100
+    p0: 0.967900
+    alert_flag: false
+    recommended_action: "no_action_required"
+    urgency: "none"
+    rationale: "Score 0.0032 < conformal threshold 0.4635"
+    trust_flags: []
+    n_trust_flags: 0
+    graph_features:
+      device_consistency_score: 0.92
+      rare_device_usage_count: 0
+      file_type_consistency_score: 0.88
+      rare_file_type_access_count: 0
+    top_reasons:
+      - feature: "login_count"
+        value: 2.0
+        contribution: 0.0012
+        direction: "increased"
+        definition: "Number of rows with activity='Logon' per user-day."
+      - feature: "http_activity_count"
+        value: 1.0
+        contribution: -0.0008
+        direction: "decreased"
+        definition: "Number of http rows per user-day."
+      - feature: "usb_connection_count"
+        value: 0.0
+        contribution: -0.0005
+        direction: "decreased"
+        definition: "Number of rows with activity='Connect' per user-day."
+
+  - user: "DDD0150"
+    day: "2011-05-10"
+    ml_risk: 0.000123
+    risk_level: "NON-ALERT"
+    confidence: 0.95
+    conformal_set: "{0}"
+    p1: 0.000380
+    p0: 0.999620
+    alert_flag: false
+    recommended_action: "no_action_required"
+    urgency: "none"
+    rationale: "Score 0.0001 < conformal threshold 0.4635"
+    trust_flags: []
+    n_trust_flags: 0
+    graph_features:
+      device_consistency_score: 1.0
+      rare_device_usage_count: 0
+      file_type_consistency_score: 1.0
+      rare_file_type_access_count: 0
+    top_reasons:
+      - feature: "login_count"
+        value: 1.0
+        contribution: -0.0001
+        direction: "decreased"
+        definition: "Number of rows with activity='Logon' per user-day."
+      - feature: "usb_connection_count"
+        value: 0.0
+        contribution: -0.0001
+        direction: "decreased"
+        definition: "Number of rows with activity='Connect' per user-day."
+      - feature: "file_access_count"
+        value: 0.0
+        contribution: -0.0001
+        direction: "decreased"
+        definition: "Number of file rows per user-day."

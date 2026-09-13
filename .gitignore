@@ -1,0 +1,55 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+.pytest_cache/
+.mypy_cache/
+
+# Environments
+.venv/
+venv/
+env/
+conda/
+
+# Jupyter
+.ipynb_checkpoints/
+
+# IDE
+.vscode/
+.idea/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Raw CERT data
+data/raw/*
+!data/raw/.gitkeep
+
+# Generated intermediate data
+data/interim/*
+!data/interim/.gitkeep
+
+data/processed/*
+!data/processed/.gitkeep
+
+# Logs
+*.log
+
+# Temporary
+tmp/
+temp/
+*.tmp
+
+# Archives (not needed in git)
+*.zip
+*.tar
+*.tar.gz
+
+# Large data files
+*.csv
+!data/README.md
+
+# Kaggle credentials
+.env.kaggle
+KAGGLE_RUNTIME_*

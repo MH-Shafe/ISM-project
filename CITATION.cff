@@ -1,0 +1,26 @@
+cff-version: 1.2.0
+title: "ISM Project Shafe"
+message: "If you use this software, please cite it as below."
+type: software
+authors:
+  - family-names: "Shafe"
+    given-names: "M. H."
+    email: "shafemahfuzulhaque@gmail.com"
+repository-code: "https://github.com/MH-Shafe/ISM-Project-Shafe"
+license: MIT
+version: "1.0.0"
+date-released: "2026-09-13"
+keywords:
+  - insider-threat-detection
+  - machine-learning
+  - lightgbm
+  - conformal-prediction
+  - explainability
+  - CERT-r4.2
+  - leakage-prevention
+abstract: >
+  Leakage-resistant insider-threat detection system using the CERT r4.2
+  dataset. Features a frozen LightGBM model (lgbm-graph-v1) with 12
+  features (8 behavioral + 4 graph), conformal uncertainty estimation,
+  SHAP explanations, and a deterministic Phase 20 decision engine.
+  Adaptive Risk was evaluated and rejected for production.

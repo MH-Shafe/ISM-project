@@ -1,0 +1,74 @@
+{
+  "phase": "20",
+  "purpose": "Full-Scale Operational Validation",
+  "row_count": 501000,
+  "unique_users": 1000,
+  "date_min": "2010-01-02",
+  "date_max": "2011-05-17",
+  "decision_counts": {
+    "ALERT": 3785,
+    "BORDERLINE": 1484,
+    "MONITOR": 178204,
+    "NON-ALERT": 317527
+  },
+  "confidence_counts": {
+    "ambiguous": 439983,
+    "high-confidence": 61017
+  },
+  "explanation_coverage": {
+    "with_3_reasons": 501000,
+    "with_partial": 0,
+    "with_no_reason": 0
+  },
+  "diagnostic_coverage": {
+    "with_trust_flags": 476200,
+    "without_trust_flags": 24800
+  },
+  "schema_version": "phase20-v1",
+  "model_version": "LightGBM 4.6.0",
+  "frozen_constants": {
+    "alert_threshold": 0.9186015432508062,
+    "conformal_t0": 0.4634739481800199,
+    "conformal_t1": 0.0046536002164601275,
+    "conformal_alpha": 0.05,
+    "conformal_n1": 323,
+    "conformal_n0": 58677
+  },
+  "score_integrity": {
+    "n_comparisons": 47000,
+    "n_mismatches": 0,
+    "max_abs_diff": 5.551115123125783e-17
+  },
+  "alert_integrity": {
+    "total_differences": 58,
+    "alert_only_mismatches": 0,
+    "borderline_additions": 58,
+    "note": "Phase20 alert_flag includes BORDERLINE per output_schema.yaml; Phase10 alert is ALERT-only"
+  },
+  "determinism": {
+    "result": "PASS",
+    "run_a_md5": "ad017e59168a2a211d0ba74422132d46",
+    "run_b_md5": "ad017e59168a2a211d0ba74422132d46"
+  },
+  "performance": {
+    "runtime_seconds": 180.34,
+    "peak_memory_mb": 1744.2
+  },
+  "output_hashes": {
+    "parquet_md5": "6476f791d1cc9f21327a94e1373f9e09",
+    "parquet_sha256": "f03ffaf7d5512405696103286ed726246b2280fbcdbb3038494c5e169d70d9b3"
+  },
+  "forbidden_operations": {
+    "model_retrained": false,
+    "threshold_changed": false,
+    "calibration_refit": false,
+    "conformal_refit": false,
+    "adaptive_risk_used": false,
+    "ph19_confirm_accessed": false
+  },
+  "leakage_audit": {
+    "label_required_for_decision": false,
+    "ground_truth_in_production_table": false,
+    "future_information_used": false
+  }
+}

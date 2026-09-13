@@ -1,0 +1,117 @@
+{
+  "phase": "20",
+  "purpose": "Final System Integration — reproducibility manifest (updated with full decision table)",
+  "timestamp_utc": "2026-09-12T00:00:00Z",
+  "frozen_system": {
+    "model_name": "lgbm-graph-v1",
+    "model_version": "LightGBM 4.6.0",
+    "seed": 42,
+    "best_iteration": 186,
+    "n_features": 12,
+    "feature_list": [
+      "login_count", "after_hours_login_count", "usb_connection_count",
+      "file_access_count", "sensitive_file_access_count", "http_activity_count",
+      "unique_device_count", "unusual_access_count",
+      "device_consistency_score", "rare_device_usage_count",
+      "file_type_consistency_score", "rare_file_type_access_count"
+    ],
+    "alert_threshold": 0.9186015432508062,
+    "conformal_alpha": 0.05,
+    "conformal_t0": 0.4634739481800199,
+    "conformal_t1": 0.0046536002164601275,
+    "conformal_n1": 323,
+    "conformal_n0": 58677
+  },
+  "decision_table": {
+    "filename": "reports/artifacts/phase20/final_user_day_decisions.parquet",
+    "row_count": 501000,
+    "unique_users": 1000,
+    "date_min": "2010-01-02",
+    "date_max": "2011-05-17",
+    "n_columns": 21,
+    "schema_version": "phase20-v1",
+    "size_bytes": 2759459,
+    "md5": "6476f791d1cc9f21327a94e1373f9e09",
+    "sha256": "f03ffaf7d5512405696103286ed726246b2280fbcdbb3038494c5e169d70d9b3",
+    "csv_filename": "reports/artifacts/phase20/final_user_day_decisions.csv",
+    "csv_size_bytes": 166097220,
+    "generation_script": "scripts/phase20_materialize_decisions.py",
+    "generation_timestamp_utc": "2026-09-12T00:00:00Z",
+    "determinism": {
+      "result": "PASS",
+      "run_a_md5": "ad017e59168a2a211d0ba74422132d46",
+      "run_b_md5": "ad017e59168a2a211d0ba74422132d46"
+    }
+  },
+  "source_files": {
+    "phase20_module": "src/experiments/phase20.py",
+    "phase20_config": "configs/phase20/",
+    "phase20_tests": "tests/test_phase20.py",
+    "phase7_freeze": "reports/artifacts/phase7_freeze_lgbm-graph-v1.json",
+    "phase9_freeze": "reports/artifacts/phase9_freeze.json",
+    "phase10_fit": "reports/artifacts/phase10_fit.json",
+    "phase10_calibration": "reports/artifacts/phase10_calibration.json",
+    "phase10_decision": "reports/artifacts/phase10_decision.json",
+    "phase11_experiment": "reports/artifacts/phase11_experiment.json",
+    "phase19_confirm": "phase19_v1_1_1/kaggle_confirm_results/phase19_v1_1_2_confirm_result.json",
+    "phase6_features": "reports/artifacts/phase6_merged_features.parquet",
+    "phase7_model": "reports/artifacts/phase7_model_lgbm-graph-v1.txt",
+    "phase7_predictions": "reports/artifacts/phase7_predictions_lgbm-graph-v1.parquet",
+    "phase10_predictions": "reports/artifacts/phase10_predictions.parquet",
+    "phase11_explanations": "reports/artifacts/phase11_explanations.parquet"
+  },
+  "test_results": {
+    "test_file": "tests/test_phase20.py",
+    "total_tests": 54,
+    "passed": 54,
+    "failed": 0,
+    "skipped": 0,
+    "status": "ALL PASS",
+    "includes_full_table_tests": true
+  },
+  "config_files": {
+    "feature_schema": "configs/phase20/final_feature_schema.yaml",
+    "conformal_integration": "configs/phase20/conformal_integration.yaml",
+    "output_schema": "configs/phase20/output_schema.yaml",
+    "decision_policy": "configs/phase20/decision_policy.yaml"
+  },
+  "artifacts": {
+    "decision_table": "reports/artifacts/phase20/final_user_day_decisions.parquet",
+    "decision_table_csv": "reports/artifacts/phase20/final_user_day_decisions.csv",
+    "decision_table_summary": "reports/artifacts/phase20/final_user_day_decisions_summary.json",
+    "inventory": "reports/artifacts/phase20/phase20_input_inventory.json",
+    "dashboard_sample": "reports/artifacts/phase20/phase20_dashboard_sample.json",
+    "analyst_summary": "reports/artifacts/phase20/phase20_analyst_summary.md",
+    "traceability": "reports/artifacts/phase20/phase20_traceability.md",
+    "leakage_audit": "reports/artifacts/phase20/phase20_leakage_audit.md",
+    "provenance_record": "built-in via build_provenance_record()"
+  },
+  "validation_gates": {
+    "GATE_1_FULL_TABLE_EXISTS": "PASS",
+    "GATE_2_ROW_INTEGRITY": "PASS",
+    "GATE_3_SCORE_INTEGRITY": "PASS (0 mismatches, max_diff=5.55e-17)",
+    "GATE_4_ALERT_INTEGRITY": "PASS (0 ALERT-only mismatches, 58 BORDERLINE additions expected)",
+    "GATE_5_NO_LABEL_LEAKAGE": "PASS",
+    "GATE_6_NO_MODEL_CHANGE": "PASS",
+    "GATE_7_NO_ADAPTIVE_RISK": "PASS",
+    "GATE_8_CONFORMAL_INTEGRITY": "PASS",
+    "GATE_9_EXPLANATION_INTEGRITY": "PASS (501000/501000 rows have 3 reasons)",
+    "GATE_10_DETERMINISM": "PASS (Run A = Run B)",
+    "GATE_11_TESTS": "PASS (54/54)",
+    "GATE_12_REPRODUCIBILITY": "PASS (hashes + provenance recorded)"
+  },
+  "forbidden_operations": [
+    "No model retraining or refitting",
+    "No new feature generation",
+    "No threshold tuning or adaptation",
+    "No Adaptive Risk fusion in production path",
+    "No label-dependent operational rules",
+    "No post-hoc threshold selection",
+    "No new ML model creation",
+    "No TEST data usage in production"
+  ],
+  "adaptive_risk_excluded": true,
+  "deterministic": true,
+  "reproducible": true,
+  "leakage_free": true
+}

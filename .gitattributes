@@ -1,0 +1,25 @@
+# Auto detect text files and perform LF normalization
+* text=auto
+
+# Explicitly declare text files
+*.py text diff=python
+*.md text diff=markdown
+*.yaml text
+*.yml text
+*.json text
+*.txt text
+*.csv text
+
+# Declare binary files
+*.parquet binary
+*.zip binary
+*.gz binary
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.gif binary
+*.ico binary
+*.ipynb binary
+
+# Notebooks
+*.ipynb diff=jupyternotebook

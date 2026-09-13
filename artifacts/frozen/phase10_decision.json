@@ -1,0 +1,32 @@
+{
+  "decision": {
+    "decision": "ACCEPT",
+    "reasons": {
+      "D1": "TEST positive coverage 1.000 >= 0.85 and Wilson LB 0.917 >= 0.75",
+      "D2": "TEST negative coverage 0.988 >= 0.9",
+      "D3": "usefulness: uncertain alerts 0 (gap 0.684), monitor rows 765",
+      "D4": "all 4 windows >= 0.7",
+      "D5": "inference 0.0543 s <= 2.0"
+    },
+    "rule": "D1-D5 documented rule; D3 failure alone downgrades ACCEPT to CONDITIONAL / DIAGNOSTIC ONLY"
+  },
+  "evidence": {
+    "test_005": {
+      "pos_coverage": 1.0,
+      "pos_wilson_lb": 0.9172756918749007,
+      "neg_coverage": 0.9880987864594422
+    },
+    "cal_005": {
+      "n_uncertain_alerts": 0,
+      "precision_gap": 0.6844262295081968,
+      "n_monitor": 765,
+      "window_pos_coverage": [
+        1.0,
+        0.912621359223301,
+        0.922077922077922,
+        1.0
+      ]
+    },
+    "inference_s": 0.0543365478515625
+  }
+}

@@ -1,0 +1,200 @@
+{
+  "experiment_id": "phase7-freeze-lgbm-graph-v1",
+  "phase": "7",
+  "model_name": "lgbm-graph-v1",
+  "dataset_version": "CERT r4.2",
+  "feature_version": "v2 (8 behavioral + 4 graph; department_file_type_mismatch_count REJECTED in Phase 7)",
+  "features": [
+    "login_count",
+    "after_hours_login_count",
+    "usb_connection_count",
+    "file_access_count",
+    "sensitive_file_access_count",
+    "http_activity_count",
+    "unique_device_count",
+    "unusual_access_count",
+    "device_consistency_score",
+    "rare_device_usage_count",
+    "file_type_consistency_score",
+    "rare_file_type_access_count"
+  ],
+  "n_features": 12,
+  "split_strategy": "chronological",
+  "split": {
+    "strategy": "chronological",
+    "train_range": "2010-01-02..2011-01-31",
+    "calibration_range": "2011-02-01..2011-03-31",
+    "test_range": "2011-04-01..2011-05-17",
+    "train": {
+      "end": "2011-01-31",
+      "rows": 395000,
+      "malicious": 1539
+    },
+    "calibration": {
+      "end": "2011-03-31",
+      "rows": 59000,
+      "malicious": 323
+    },
+    "test": {
+      "rows": 47000,
+      "malicious": 30
+    }
+  },
+  "model": {
+    "name": "LightGBM",
+    "version": "4.6.0",
+    "params": {
+      "objective": "binary",
+      "metric": "auc",
+      "learning_rate": 0.03,
+      "num_leaves": 31,
+      "min_data_in_leaf": 100,
+      "feature_fraction": 0.8,
+      "bagging_fraction": 0.8,
+      "bagging_freq": 1,
+      "verbose": -1,
+      "seed": 42
+    },
+    "seed": 42,
+    "best_iteration": 186,
+    "early_stopping": "on calibration (auc), patience 100, up to 3000 rounds"
+  },
+  "calibration": {
+    "method": "max-F1 threshold on calibration only",
+    "threshold_method": "best_f1_threshold on calibration scores",
+    "threshold_max_f1": 0.9186015432508062,
+    "threshold_50p_precision": 0.9962470269668189,
+    "f1_at_max_f1_threshold_calibration": 0.5890652557319224
+  },
+  "freeze": {
+    "status": "frozen candidate baseline (not the final system)",
+    "department_decision": "REJECT",
+    "evidence_files": [
+      "phase7_reproduction.json",
+      "phase7_seed_robustness.json",
+      "phase7_feature_stability.json",
+      "phase7_department_decision.json"
+    ],
+    "decision_basis": "TRAIN/CALIBRATION evidence only; TEST evaluated once after freeze"
+  },
+  "evaluation": {
+    "scope": "TEST only (2011-04-01..2011-05-17); evaluated once",
+    "bootstrap_scope": "evaluation-only uncertainty (resample TEST rows; no refit/tune)",
+    "classification": {
+      "n": 47000,
+      "positives": 30,
+      "auc_roc": 0.9391565538286849,
+      "auc_pr": 0.2677761042396373
+    },
+    "bootstrap": {
+      "auc_roc": {
+        "metric": "auc_roc",
+        "n_boot": 1000,
+        "n_valid": 1000,
+        "n_skipped": 0,
+        "ci_low": 0.8996508631649178,
+        "ci_high": 0.9747060653915403,
+        "mean": 0.9387147015951081
+      },
+      "auc_pr": {
+        "metric": "auc_pr",
+        "n_boot": 1000,
+        "n_valid": 1000,
+        "n_skipped": 0,
+        "ci_low": 0.1403606970034867,
+        "ci_high": 0.46021988013571186,
+        "mean": 0.2864554261889929
+      }
+    },
+    "top_k": {
+      "precision_at_10": 0.6,
+      "recall_at_10": 0.2,
+      "precision_at_30": 0.36666666666666664,
+      "recall_at_30": 0.36666666666666664,
+      "precision_at_50": 0.28,
+      "recall_at_50": 0.4666666666666667,
+      "precision_at_100": 0.18,
+      "recall_at_100": 0.6
+    },
+    "at_max_f1_threshold": {
+      "threshold": 0.9186015432508062,
+      "tp": 14,
+      "fp": 35,
+      "fn": 16,
+      "precision": 0.2857142857142857,
+      "recall": 0.4666666666666667,
+      "f1": 0.35443037974683544,
+      "n_alerts": 49,
+      "tn": 46935,
+      "mcc": 0.3646390741124269,
+      "balanced_accuracy": 0.7329607550919026,
+      "fpr": 0.0007451564828614009,
+      "fnr": 0.5333333333333333,
+      "alert_rate": 0.0010425531914893618
+    },
+    "at_50p_precision_threshold": {
+      "threshold": 0.9962470269668189,
+      "tp": 0,
+      "fp": 0,
+      "fn": 30,
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1": 0.0,
+      "n_alerts": 0,
+      "tn": 46970,
+      "mcc": 0.0,
+      "balanced_accuracy": 0.5,
+      "fpr": 0.0,
+      "fnr": 1.0,
+      "alert_rate": 0.0
+    },
+    "calibration_at_max_f1_threshold": {
+      "threshold": 0.9186015432508062,
+      "tp": 167,
+      "fp": 77,
+      "fn": 156,
+      "precision": 0.6844262295081968,
+      "recall": 0.5170278637770898,
+      "f1": 0.5890652557319224,
+      "n_alerts": 244,
+      "tn": 58600,
+      "mcc": 0.5929587089082781,
+      "balanced_accuracy": 0.7578577974576776,
+      "fpr": 0.001312268861734581,
+      "fnr": 0.48297213622291024,
+      "alert_rate": 0.004135593220338983
+    },
+    "per_scenario_recall_at_max_f1_threshold": {
+      "2": {
+        "n_malicious_rows": 28,
+        "n_users": 1410,
+        "recall": 0.4642857142857143
+      },
+      "3": {
+        "n_malicious_rows": 2,
+        "n_users": 470,
+        "recall": 0.5
+      }
+    }
+  },
+  "cost": {
+    "train_runtime_s": 4.64,
+    "test_predict_s": 1.2913,
+    "model_bytes": 651047
+  },
+  "feature_importance_gain": {
+    "login_count": 684320.0752010345,
+    "after_hours_login_count": 211210.619972229,
+    "usb_connection_count": 12114925.061206818,
+    "file_access_count": 361758.43126296997,
+    "sensitive_file_access_count": 972292.4424285889,
+    "http_activity_count": 6941284.47032547,
+    "unique_device_count": 60056.4684677124,
+    "unusual_access_count": 29835.35276222229,
+    "device_consistency_score": 1193345.779663086,
+    "rare_device_usage_count": 27151.93349838257,
+    "file_type_consistency_score": 62770.36652755737,
+    "rare_file_type_access_count": 5682.397407531738
+  },
+  "notes": "Phase 7 freeze record; see reports/phase7_freeze_report.md"
+}

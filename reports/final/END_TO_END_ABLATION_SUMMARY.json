@@ -1,0 +1,248 @@
+{
+  "title": "ISM Project — End-to-End Ablation Summary",
+  "last_updated": "2026-09-12",
+  "dataset": "CERT r4.2",
+  "analytical_unit": "user x day",
+  "total_rows": 501000,
+  "total_malicious_rows": 1892,
+  "prevalence": 0.0038,
+  "splits": {
+    "train": {"rows": 395000, "positives": 1539},
+    "cal": {"rows": 59000, "positives": 323},
+    "test": {"rows": 47000, "positives": 30}
+  },
+  "table1_directly_comparable": [
+    {
+      "entry": "A",
+      "label": "Behavioral only (lgbm-baseline-v2)",
+      "phase": 4,
+      "n_features": 8,
+      "features": ["login_count", "after_hours_login_count", "usb_connection_count", "file_access_count", "http_activity_count", "unique_device_count", "sensitive_file_access_count", "unusual_access_count"],
+      "model": "LightGBM 4.6.0",
+      "best_iteration": 182,
+      "seed": 42,
+      "metrics": {
+        "auc_roc": 0.93534,
+        "auc_pr": 0.15304,
+        "p_at_10": 0.400,
+        "p_at_30": 0.367,
+        "r_at_50": 0.333,
+        "f1": 0.346,
+        "mcc": 0.350,
+        "alerts": 22,
+        "precision": 0.409,
+        "recall": 0.300,
+        "balanced_accuracy": 0.662
+      },
+      "verdict": "FREEZE",
+      "cohort": "TEST 47K/30pos",
+      "notes": "Dominant behavioral arm; FREEZE record",
+      "source_artifact": "reports/artifacts/phase4_experiment_a.json"
+    },
+    {
+      "entry": "B",
+      "label": "Graph only (Phase 6 Arm B)",
+      "phase": 6,
+      "n_features": 5,
+      "features": ["device_consistency_score", "rare_device_usage_count", "file_type_consistency_score", "rare_file_type_access_count", "department_file_type_mismatch_count"],
+      "model": "LightGBM 4.6.0",
+      "best_iteration": 3,
+      "seed": 42,
+      "metrics": {
+        "auc_roc": 0.78635,
+        "auc_pr": 0.01431,
+        "p_at_10": 0.029,
+        "p_at_30": 0.029,
+        "r_at_50": 0.400,
+        "f1": 0.054,
+        "mcc": 0.105,
+        "alerts": 417,
+        "precision": 0.029,
+        "recall": 0.400,
+        "balanced_accuracy": 0.696
+      },
+      "verdict": "WEAK",
+      "cohort": "TEST 47K/30pos",
+      "notes": "Weak standalone; best_iter 3 = stump",
+      "source_artifact": "reports/artifacts/phase6_experiment_b.json"
+    },
+    {
+      "entry": "C",
+      "label": "Behavioral + graph (lgbm-graph-v1)",
+      "phase": 7,
+      "n_features": 12,
+      "features": ["login_count", "after_hours_login_count", "usb_connection_count", "file_access_count", "sensitive_file_access_count", "http_activity_count", "unique_device_count", "unusual_access_count", "device_consistency_score", "rare_device_usage_count", "file_type_consistency_score", "rare_file_type_access_count"],
+      "model": "LightGBM 4.6.0",
+      "best_iteration": 186,
+      "seed": 42,
+      "metrics": {
+        "auc_roc": 0.9391565538286849,
+        "auc_pr": 0.2677761042396373,
+        "p_at_10": 0.600,
+        "p_at_30": 0.367,
+        "r_at_50": 0.467,
+        "f1": 0.35443037974683544,
+        "mcc": 0.3646390741124269,
+        "alerts": 49,
+        "precision": 0.2857142857142857,
+        "recall": 0.4666666666666667,
+        "balanced_accuracy": 0.7329607550919026
+      },
+      "bootstrap": {
+        "auc_roc_mean": 0.9387147015951081,
+        "auc_roc_ci": [0.8996508631649178, 0.9747060653915403],
+        "auc_pr_mean": 0.2864554261889929,
+        "auc_pr_ci": [0.1403606970034867, 0.46021988013571186]
+      },
+      "scenario_recall": {
+        "scenario_2": 0.4642857142857143,
+        "scenario_3": 0.5
+      },
+      "verdict": "FREEZE_CANDIDATE",
+      "cohort": "TEST 47K/30pos",
+      "notes": "Production model; department_file_type_mismatch_count REJECTED",
+      "source_artifact": "reports/artifacts/phase7_freeze_lgbm-graph-v1.json"
+    },
+    {
+      "entry": "D1",
+      "label": "Adaptive Risk (Phase 8 equal-weight)",
+      "phase": 8,
+      "n_components": 3,
+      "components": ["ml_risk", "trust_risk", "behavior_risk"],
+      "weights": [0.333, 0.333, 0.333],
+      "model": "Derived from frozen components",
+      "metrics": {
+        "auc_roc": 0.90977,
+        "auc_pr": 0.06720,
+        "p_at_10": 0.100,
+        "p_at_30": 0.100,
+        "r_at_50": 0.267,
+        "f1": 0.105,
+        "mcc": 0.170,
+        "alerts": 256,
+        "precision": 0.043,
+        "recall": 0.267,
+        "balanced_accuracy": 0.632
+      },
+      "verdict": "REJECTED",
+      "cohort": "TEST 47K/30pos",
+      "notes": "Degrades all metrics vs ML-only; trust_risk redundant with ml_risk",
+      "source_artifact": "reports/artifacts/phase8_experiment.json"
+    }
+  ],
+  "table2_incremental_layers": [
+    {
+      "entry": "C",
+      "label": "Frozen classifier",
+      "phase": 7,
+      "component": "LightGBM 12 features, seed 42, threshold 0.9186",
+      "evidence_type": "Chronological TEST",
+      "cohort": "TEST 47K/30pos",
+      "metrics": {
+        "auc_roc": 0.9391565538286849,
+        "auc_pr": 0.2677761042396373,
+        "f1": 0.35443037974683544,
+        "mcc": 0.3646390741124269,
+        "alerts": 49
+      },
+      "verdict": "FREEZE",
+      "notes": "Production baseline; all subsequent layers are pure functions of frozen scores",
+      "source_artifact": "reports/artifacts/phase7_freeze_lgbm-graph-v1.json"
+    },
+    {
+      "entry": "D2",
+      "label": "Phase 19 CONFIRM",
+      "phase": 19,
+      "component": "Adaptive risk A0 vs Family C",
+      "evidence_type": "Separate user-disjoint CONFIRM cohort",
+      "cohort": "CONFIRM 98K/245pos",
+      "metrics": {
+        "a0": {
+          "roc_auc": 0.7788611090218163,
+          "pr_auc": 0.29841990281455416,
+          "f1": 0.3406940063091483,
+          "alerts": 72,
+          "precision": 0.75,
+          "recall": 0.22040816326530613
+        },
+        "family_c": {
+          "roc_auc": 0.7507359052287494,
+          "pr_auc": 0.29711496713446955,
+          "f1": 0.3385579937304075,
+          "alerts": 74,
+          "precision": 0.7297297297297297,
+          "recall": 0.22040816326530613
+        },
+        "delta_roc_auc": -0.028125203793066822,
+        "delta_pr_auc": -0.0013049356800846068,
+        "delta_f1": -0.002136012578740798
+      },
+      "verdict": "FAIL",
+      "notes": "delta ROC-AUC -0.0281 < -0.01 threshold; adaptive risk rejected",
+      "source_artifact": "phase19_v1_1_1/kaggle_confirm_results/phase19_v1_1_2_confirm_result.json"
+    },
+    {
+      "entry": "E",
+      "label": "Conformal confidence",
+      "phase": 10,
+      "component": "Mondrian split-conformal, alpha=0.05",
+      "evidence_type": "CAL-only fit, TEST evaluation",
+      "cohort": "CAL 61K + TEST 47K",
+      "metrics": {
+        "pos_coverage": 1.0,
+        "neg_coverage": 0.988,
+        "marginal_coverage": 0.988,
+        "wilson_lb_pos": 0.9172756918749007,
+        "monitor_band_rows": 532,
+        "monitor_precision": 0.015
+      },
+      "calibration_params": {
+        "alpha": 0.05,
+        "t0": 0.4634739481800199,
+        "t1": 0.0046536002164601275,
+        "n1": 323,
+        "n0": 58677
+      },
+      "verdict": "ACCEPT",
+      "notes": "Diagnostic overlay; does not change frozen outputs",
+      "source_artifact": "reports/artifacts/phase10_experiment.json"
+    },
+    {
+      "entry": "F",
+      "label": "Full system (Phase 20)",
+      "phase": 20,
+      "component": "Decision engine: ML risk + risk level + confidence + conformal set + explanations + actions",
+      "evidence_type": "Full 501K materialization",
+      "cohort": "501K full table",
+      "metrics": {
+        "row_count": 501000,
+        "unique_users": 1000,
+        "alert": 3785,
+        "borderline": 1484,
+        "monitor": 178204,
+        "non_alert": 317527,
+        "score_mismatches": 0,
+        "determinism": "PASS",
+        "tests_passed": "54/54"
+      },
+      "verdict": "COMPLETE",
+      "notes": "Dashboard-ready output; Adaptive Risk excluded; runtime 180s",
+      "source_artifact": "reports/artifacts/phase20/final_user_day_decisions_summary.json"
+    }
+  ],
+  "rejected_approaches": [
+    {"approach": "lr 0.05 baseline", "phase": "1-2", "reason": "Collapsed to best_iter 1, degenerate scores"},
+    {"approach": "Graph-only (Arm B)", "phase": 6, "reason": "Weak standalone: AUC-PR 0.014, best_iter 3"},
+    {"approach": "department_file_type_mismatch_count", "phase": 7, "reason": "Zero gain 5/5 seeds, 49 non-zero rows, CAL AUC-ROC 0.500"},
+    {"approach": "Adaptive risk (equal-weight)", "phase": 8, "reason": "Degrades all metrics vs ML-only"},
+    {"approach": "Adaptive risk (learned)", "phase": 8, "reason": "Collapses to ML-only [1,0,0]"},
+    {"approach": "Capacity/percentile alert policies", "phase": 9, "reason": "Fail S1-S3 selection rules"},
+    {"approach": "De-duplication beyond 1 day", "phase": 12, "reason": "Destroys recall (3d: 0.248, 7d: 0.139)"},
+    {"approach": "Rolling threshold", "phase": 12, "reason": "Never beats frozen policy"},
+    {"approach": "Counterfactual explanations", "phase": 11, "reason": "Not supported under frozen-output contract"},
+    {"approach": "Platt calibration (production)", "phase": 17, "reason": "Mechanical FAIL: AUC-ROC not invariant under tie creation"},
+    {"approach": "Binning calibration (production)", "phase": 17, "reason": "21,127 alerts, precision 0.018 — unusable"},
+    {"approach": "ECDF calibration (production)", "phase": 17, "reason": "Brier -216% — percentile map, not calibration"},
+    {"approach": "Adaptive risk A0/Family C", "phase": 19, "reason": "CONFIRM FAIL: delta ROC-AUC -0.0281 < -0.01"}
+  ]
+}

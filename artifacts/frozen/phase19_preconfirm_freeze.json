@@ -1,0 +1,99 @@
+{
+  "phase": 19,
+  "spec_version": "1.1",
+  "source_md5": "e54c70663ab28df366f8f131a777e804",
+  "spec_md5": "81a71028bda966f57941ac5b6b6c583a",
+  "bundle_md5": "bf87c2316bc2d6c3d912aa69d67fd862",
+  "allocation_md5": "09521712780275643d46777fbb8c20b6",
+  "phase6_features_md5": "9a3b188573bb953416981dfea3379def",
+  "phase14_split_md5": "da013f825246d568bcfdaf19dcf2c7e7",
+  "phase18_role_department_md5": "c1a684ed6152fbef7d1b45bb1291079f",
+  "run1_result_identity": {
+    "run_id": 1,
+    "selected": "C",
+    "n_candidates": 32,
+    "n_outer_folds": 5,
+    "confirm_opened": false,
+    "confirm_completed": false
+  },
+  "run2_result_identity": {
+    "run_id": 2,
+    "selected": "C",
+    "n_candidates": 32,
+    "n_outer_folds": 5,
+    "confirm_opened": false,
+    "confirm_completed": false
+  },
+  "double_run_determinism": "PASS",
+  "canonical_science_md5": "a4f1fa5f772ab5526aac0b66649c1d41",
+  "selected_family": "C",
+  "selected_hp": 1.0,
+  "selection_metric": "mean_f1",
+  "selected_inner_mean_f1": 0.2254958342349012,
+  "selection_method": "3-fold inner user-disjoint CV inside outer-training data",
+  "tie_status": {
+    "tied_candidates": [
+      "C_hp=1.0",
+      "C_hp=10.0"
+    ],
+    "tied_mean_f1": 0.2254958342349012,
+    "tie_resolution": "frozen deterministic first occurrence"
+  },
+  "dev_gate_defined": false,
+  "new_posthoc_dev_gate_added": false,
+  "confirm_criteria_role": "CONFIRM_ONLY",
+  "confirm_candidate_count": 1,
+  "confirm_selected_candidate": {
+    "family": "C",
+    "hp": 1.0,
+    "hp_val": 1.0
+  },
+  "confirm_reference_arm": "A0",
+  "confirm_user_count": 196,
+  "confirm_user_md5": "e0efc0db9bf1aa18c3a9360a39030c9f",
+  "confirm_user_sha256": "7083c49d6cbf7238c0e26f464e22ffe01116c0dad12dacd1dab1ffd1553f31a0",
+  "confirm_pass_rule": {
+    "condition": "delta_auc_pr > 0 AND delta_auc_roc > -0.005 AND f1 >= 0.30 AND n_alerts <= 1500",
+    "delta_auc_pr_threshold": 0.0,
+    "delta_auc_roc_threshold": -0.005,
+    "f1_threshold": 0.3,
+    "n_alerts_threshold": 1500,
+    "source_lines": "692-695",
+    "branch": "elif (L694)"
+  },
+  "confirm_fail_safe_rule": {
+    "condition": "delta_auc_roc < -0.01 OR delta_auc_pr < -0.01 OR n_alerts > 2000",
+    "delta_auc_roc_threshold": -0.01,
+    "delta_auc_pr_threshold": -0.01,
+    "n_alerts_threshold": 2000,
+    "source_lines": "692",
+    "branch": "if (L692)"
+  },
+  "confirm_caution_rule": {
+    "condition": "otherwise (not PASS, not FAIL)",
+    "source_lines": "696-697",
+    "branch": "else (L696)"
+  },
+  "verdict_branch_order": "FAIL -> PASS -> CAUTION (evaluated in this order)",
+  "confirm_metric_definitions": {
+    "pr_auc": "sklearn.metrics.average_precision_score (PR-AUC)",
+    "roc_auc": "sklearn.metrics.roc_auc_score (ROC-AUC)",
+    "f1": "sklearn.metrics.f1_score at threshold",
+    "precision": "sklearn.metrics.precision_score at threshold",
+    "recall": "sklearn.metrics.recall_score at threshold",
+    "mcc": "sklearn.metrics.matthews_corrcoef at threshold",
+    "n_alerts": "count of predicted positives (score >= threshold)",
+    "threshold_source": "best_f1_threshold on CONFIRM y_confirm scores",
+    "threshold_policy": "best_f1 on CONFIRM, applied once",
+    "note": "threshold is chosen on CONFIRM data using best F1; this is the frozen protocol"
+  },
+  "threshold_source": "best_f1_threshold(y_confirm, scores) - chosen on CONFIRM data per frozen protocol",
+  "model_fitting": "LightGBM trained on ALL DEV users, predicted on CONFIRM users (fold_safe_lgbm_predict)",
+  "confirm_opened": false,
+  "confirm_completed": false,
+  "prior_confirm_evaluation_found": false,
+  "deep_role": "OPTION_B",
+  "deep_models_confirm_access": false,
+  "created_at_utc": "2026-09-09T06:26:24.035840Z",
+  "research_integrity_note": "Under Phase 19 v1.1 as frozen, the top lightweight candidate is selected through nested DEV CV. No separate DEV advancement threshold was pre-registered. Following successful deterministic double-run verification, the selected candidate proceeds to the pre-confirm freeze. No new DEV gate is introduced after observing DEV results. The CONFIRM acceptance criteria (F1>=0.30, delta_auc_pr>0, etc.) are CONFIRM_ONLY and are not reinterpreted as DEV gates."
+}

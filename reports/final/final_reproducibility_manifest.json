@@ -1,0 +1,138 @@
+{
+  "title": "ISM Project — Final Reproducibility Manifest",
+  "last_updated": "2026-09-12",
+  "frozen_model": {
+    "name": "lgbm-graph-v1",
+    "framework": "LightGBM",
+    "version": "4.6.0",
+    "n_features": 12,
+    "best_iteration": 186,
+    "seed": 42,
+    "train_runtime_s": 4.64,
+    "predict_test_s": 1.29,
+    "model_bytes": 651047
+  },
+  "frozen_threshold": {
+    "value": 0.9186015432508062,
+    "method": "frozen_max_f1",
+    "source": "CALIBRATION",
+    "phase": 9
+  },
+  "conformal": {
+    "method": "mondrian_split_conformal",
+    "alpha": 0.05,
+    "t0": 0.4634739481800199,
+    "t1": 0.0046536002164601275,
+    "n1": 323,
+    "n0": 58677,
+    "wilson_lb_pos": 0.9172756918749007,
+    "phase": 10
+  },
+  "splits": {
+    "train": {"rows": 395000, "positives": 1539},
+    "cal": {"rows": 59000, "positives": 323},
+    "test": {"rows": 47000, "positives": 30},
+    "analytical_unit": "user x day",
+    "method": "chronological",
+    "overlap": "none"
+  },
+  "features": {
+    "behavioral": [
+      "login_count",
+      "after_hours_login_count",
+      "usb_connection_count",
+      "file_access_count",
+      "sensitive_file_access_count",
+      "http_activity_count",
+      "unique_device_count",
+      "unusual_access_count"
+    ],
+    "graph": [
+      "device_consistency_score",
+      "rare_device_usage_count",
+      "file_type_consistency_score",
+      "rare_file_type_access_count"
+    ],
+    "rejected": ["department_file_type_mismatch_count"]
+  },
+  "risk_levels": {
+    "ALERT": {"condition": "ml_risk >= 0.9186015432508062", "confidence": 0.95, "action": "escalate_to_incident_response", "urgency": "immediate"},
+    "BORDERLINE": {"condition": "0.8686015432508062 <= ml_risk < 0.9186015432508062", "confidence": 0.90, "action": "queue_for_analyst_review", "urgency": "within_24h"},
+    "MONITOR": {"condition": "0.4634739481800199 <= ml_risk < 0.8686015432508062", "confidence": 0.90, "action": "add_to_watchlist", "urgency": "weekly"},
+    "NON-ALERT": {"condition": "ml_risk < 0.4634739481800199", "confidence": 0.95, "action": "no_action_required", "urgency": "none"}
+  },
+  "decision_table": {
+    "row_count": 501000,
+    "n_columns": 21,
+    "schema_version": "phase20-v1",
+    "alert": 3785,
+    "borderline": 1484,
+    "monitor": 178204,
+    "non_alert": 317527,
+    "score_mismatches": 0,
+    "determinism": "PASS",
+    "runtime_seconds": 180.34,
+    "peak_memory_mb": 1744.2
+  },
+  "test_suite": {
+    "total": 54,
+    "passed": 54,
+    "failed": 0,
+    "unit": 39,
+    "full_table_integration": 15
+  },
+  "environment": {
+    "os": "win32",
+    "python": "3.11.9",
+    "lightgbm_kernel": "4.6.0",
+    "lightgbm_local": "4.7.0",
+    "pytest": "9.1.1"
+  },
+  "artifacts": {
+    "phase20_decision_table": {
+      "path": "reports/artifacts/phase20/final_user_day_decisions.parquet",
+      "md5": "6476f791d1cc9f21327a94e1373f9e09",
+      "sha256": "f03ffaf7d5512405696103286ed726246b2280fbcdbb3038494c5e169d70d9b3"
+    },
+    "phase20_archive_v2": {
+      "path": "reports/artifacts/phase20/PHASE20_COMPLETE_ARCHIVE_V2.zip",
+      "md5": "2fd2fb1f9320be545818e7f0355b6bfa",
+      "sha256": "0fee9e98a6c899ded6cf536dcec16a749b122fe6a6d79a48b64fc6304dc82918"
+    },
+    "phase19_archive": {
+      "path": "phase19_v1_1_1/",
+      "md5": "692d5c77f57703ee597b9f9aa7868597"
+    },
+    "phase20_script": {
+      "path": "scripts/phase20_materialize_decisions.py"
+    },
+    "phase20_tests": {
+      "path": "tests/test_phase20.py"
+    }
+  },
+  "rejected_approaches": [
+    {"approach": "lr 0.05 baseline", "phase": "1-2", "reason": "Collapsed to best_iter 1"},
+    {"approach": "Graph-only (Arm B)", "phase": 6, "reason": "Weak standalone: AUC-PR 0.014"},
+    {"approach": "department_file_type_mismatch_count", "phase": 7, "reason": "Zero gain 5/5 seeds"},
+    {"approach": "Adaptive risk (equal-weight)", "phase": 8, "reason": "Degrades all metrics vs ML-only"},
+    {"approach": "Adaptive risk (learned)", "phase": 8, "reason": "Collapses to ML-only [1,0,0]"},
+    {"approach": "Capacity/percentile alert policies", "phase": 9, "reason": "Fail S1-S3 rules"},
+    {"approach": "De-duplication beyond 1 day", "phase": 12, "reason": "Destroys recall"},
+    {"approach": "Rolling threshold", "phase": 12, "reason": "Never beats frozen policy"},
+    {"approach": "Counterfactual explanations", "phase": 11, "reason": "Not supported under frozen-output contract"},
+    {"approach": "Platt calibration (production)", "phase": 17, "reason": "Mechanical FAIL"},
+    {"approach": "Binning calibration (production)", "phase": 17, "reason": "21,127 alerts, unusable"},
+    {"approach": "ECDF calibration (production)", "phase": 17, "reason": "Brier -216%"},
+    {"approach": "Adaptive risk A0/Family C", "phase": 19, "reason": "CONFIRM FAIL: delta ROC-AUC -0.0281"}
+  ],
+  "leakage_audit": {
+    "no_future_in_features": "PASS",
+    "no_test_cal_in_train": "PASS",
+    "no_target_as_feature": "PASS",
+    "no_identifiers_as_features": "PASS",
+    "conformal_cal_only": "PASS",
+    "threshold_cal_only": "PASS",
+    "explanations_label_free": "PASS",
+    "decision_engine_frozen_only": "PASS"
+  }
+}

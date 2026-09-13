@@ -1,0 +1,75 @@
+{
+  "experiment_id": "phase11-explainability",
+  "phase": "11",
+  "dataset_version": "CERT r4.2",
+  "model": {
+    "name": "lgbm-graph-v1",
+    "version": "4.6.0",
+    "best_iteration": 186
+  },
+  "split": {
+    "test": {
+      "rows": 47000,
+      "malicious": 30
+    }
+  },
+  "scope": "TEST explanations generated once after the method and selection policy were frozen in the calibration stage; descriptive only, no label influence",
+  "explained": {
+    "n_rows": 21043,
+    "alerts": 49,
+    "monitor": 20494,
+    "non_alert_sample": 500
+  },
+  "alerts": {
+    "n": 49,
+    "n_alerts_all_confident_positive": 49,
+    "top_reason_1_top_features": {
+      "login_count": 2,
+      "after_hours_login_count": 4,
+      "usb_connection_count": 36,
+      "file_access_count": 8,
+      "sensitive_file_access_count": 0,
+      "http_activity_count": 26,
+      "unique_device_count": 3,
+      "unusual_access_count": 2,
+      "device_consistency_score": 9,
+      "rare_device_usage_count": 0,
+      "file_type_consistency_score": 5,
+      "rare_file_type_access_count": 1
+    },
+    "mean_base_value": -2.3177651276104196,
+    "mean_margin": 3.2535097696449
+  },
+  "monitor": {
+    "n": 20494,
+    "conformal_set_dist": {
+      "0": 0,
+      "1": 532,
+      "01": 19962,
+      "empty": 0
+    },
+    "mean_score": 0.46873840600203975
+  },
+  "non_alert_sample": {
+    "n": 500,
+    "conformal_set_dist": {
+      "0": 79,
+      "1": 0,
+      "01": 421,
+      "empty": 0
+    },
+    "mean_score": 0.05363912543350176
+  },
+  "conformal_overlay": {
+    "alpha": 0.05,
+    "t0": 0.4634739481800199
+  },
+  "reconstruction_test": {
+    "n": 47000,
+    "max_abs_error": 3.552713678800501e-14,
+    "mean_abs_error": 3.714247331869045e-15,
+    "tol": 1e-06,
+    "ok": true
+  },
+  "notes": "the frozen alert policy and conformal layer are unchanged"
+}

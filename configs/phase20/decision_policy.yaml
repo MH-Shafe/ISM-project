@@ -1,0 +1,88 @@
+# Phase 20: Decision Policy Documentation
+# Deterministic rules for risk level classification and recommended actions.
+
+policy_version: "1.0"
+phase: 20
+deterministic: true
+frozen: true
+
+# Risk level classification rules (Phase 11 validated)
+risk_level_rules:
+  - level: ALERT
+    condition: "ml_risk >= 0.9186015432508062"
+    description: "Score exceeds the frozen max-F1 alert threshold (Phase 9)"
+    confidence: 0.95
+    conformal_set: "{1}"
+    ground: "Phase 9 frozen_max_f1 policy, CALIBRATION-selected"
+
+  - level: BORDERLINE
+    condition: "0.8686015432508062 <= ml_risk < 0.9186015432508062"
+    description: "Score in the borderline zone (within 0.05 of alert threshold)"
+    confidence: 0.90
+    conformal_set: "{0,1}"
+    ground: "Phase 11 BORDERLINE_WIDTH = 0.05"
+
+  - level: MONITOR
+    condition: "0.4634739481800199 <= ml_risk < 0.8686015432508062"
+    description: "Score in the monitor zone (conformal t0 to borderline)"
+    confidence: 0.90
+    conformal_set: "{0,1}"
+    ground: "Phase 10 conformal t0 threshold (alpha=0.05)"
+
+  - level: NON-ALERT
+    condition: "ml_risk < 0.4634739481800199"
+    description: "Score below the conformal t0 threshold"
+    confidence: 0.95
+    conformal_set: "{0}"
+    ground: "Phase 10 conformal t0 threshold (alpha=0.05)"
+
+# Recommended action rules (Phase 11 validated)
+action_rules:
+  - action: escalate_to_incident_response
+    risk_level: ALERT
+    urgency: immediate
+    description: "Alert user-day to incident response team"
+
+  - action: queue_for_analyst_review
+    risk_level: BORDERLINE
+    urgency: within_24h
+    description: "Queue for analyst review within 24 hours (borderline alert)"
+
+  - action: add_to_watchlist
+    risk_level: MONITOR
+    urgency: weekly
+    description: "Add to watchlist, review weekly"
+
+  - action: no_action_required
+    risk_level: NON-ALERT
+    urgency: none
+    description: "No action required"
+
+# Trust flag modifiers (do not change risk level, add context)
+trust_flag_modifiers:
+  - flag: "new_device_count>0"
+    effect: "Adds context to rationale; does not change risk level"
+    source: "rare_device_usage_count > 0"
+
+  - flag: "new_file_type_count>0"
+    effect: "Adds context to rationale; does not change risk level"
+    source: "rare_file_type_access_count > 0"
+
+  - flag: "low_device_consistency"
+    effect: "Adds context to rationale; does not change risk level"
+    source: "device_consistency_score < 0.5"
+
+  - flag: "low_file_type_consistency"
+    effect: "Adds context to rationale; does not change risk level"
+    source: "file_type_consistency_score < 0.5"
+
+# Forbidden operations (Phase 20 core rules)
+forbidden:
+  - "No model retraining or refitting"
+  - "No new feature generation"
+  - "No threshold tuning or adaptation"
+  - "No Adaptive Risk fusion in production path"
+  - "No label-dependent operational rules"
+  - "No post-hoc threshold selection"
+  - "No new ML model creation"
+  - "No TEST data usage in production"

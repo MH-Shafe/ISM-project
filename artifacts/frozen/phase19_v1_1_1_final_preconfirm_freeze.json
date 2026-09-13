@@ -1,0 +1,76 @@
+{
+  "phase": "19",
+  "version": "1.1.1",
+  "state": "FINAL_PRECONFIRM_FROZEN",
+
+  "selected_family": "C",
+  "selected_hp": 1.0,
+  "comparison_arm": "A0",
+
+  "dev_users": 588,
+  "confirm_users": 196,
+  "dev_confirm_overlap": 0,
+
+  "a0_frozen_threshold": 0.989445417431935,
+  "c_frozen_threshold": 0.35866671520672855,
+
+  "threshold_source": "DEV_OOF",
+  "threshold_out_of_fold": true,
+  "ph19_confirm_used_for_threshold": false,
+
+  "threshold_determinism": "PASS",
+  "threshold_canonical_md5":
+    "f73d2414902e2091fe109eedec3af906",
+
+  "phase19_source_md5":
+    "6cd6f089e1f7277f3a3b79c52f5ba37f",
+
+  "threshold_driver_md5":
+    "ea1c2b71ca6ead71a2cd161c70005ea0",
+
+  "phase6_md5":
+    "9a3b188573bb953416981dfea3379def",
+
+  "phase14_md5":
+    "da013f825246d568bcfdaf19dcf2c7e7",
+
+  "phase18_role_md5":
+    "c1a684ed6152fbef7d1b45bb1291079f",
+
+  "allocation_md5":
+    "09521712780275643d46777fbb8c20b6",
+
+  "historical_dev_canonical_md5":
+    "a4f1fa5f772ab5526aac0b66649c1d41",
+
+  "fold_provenance_available": true,
+  "oof_user_leakage": false,
+
+  "confirm_path_leakage_safe": true,
+
+  "confirm_opened": false,
+  "confirm_completed": false,
+
+  "confirm_evaluation_count_allowed": 1,
+
+  "tests_passed": 70,
+  "tests_failed": 0,
+
+  "run_a_md5":
+    "f24c33d596a8295f77fdfab6965256f5",
+
+  "run_a_sha256":
+    "750f435ac4c3d7d8d5c674e01ab0ccb1266f57b76d4e83619e172f1ff031b93d",
+
+  "run_b_md5":
+    "d6895a0d75c5407addd78286c70689a2",
+
+  "run_b_sha256":
+    "computed_from_actual_file",
+
+  "threshold_freeze_md5":
+    "d7adbe6138177ff5bc966f8c53b2e772",
+
+  "threshold_freeze_sha256":
+    "611976dbcd0b710c90f506ad6960bf04720f35961ff3ee4df439078eb62a495b"
+}

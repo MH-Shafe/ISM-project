@@ -1,0 +1,19 @@
+# PC verification environment (OBSERVED 2026-08-17, Phase 16)
+
+Versions are exactly those installed and used for the local test suite and
+verification gate. Python 3.11.9 (Windows).
+
+lightgbm==4.7.0
+numpy==2.4.6
+pandas==3.0.5
+scikit-learn==1.9.0
+pyarrow==25.0.1
+pytest==9.1.1
+
+# Notes
+# - The frozen model was TRAINED on Kaggle with lightgbm==4.6.0 (see
+#   reports/artifacts/phase7_freeze_lgbm-graph-v1.json). Local lightgbm 4.7.0
+#   reproduced frozen TEST scores to max abs diff 5.6e-17 (Phase 15 gate).
+# - duckdb, shap, xgboost, catboost, networkx, torch are NOT installed on the
+#   PC; they are Kaggle-side only (http.csv streaming / SHAP cross-check).
+#   See docs/environment.md for the full environment record.
