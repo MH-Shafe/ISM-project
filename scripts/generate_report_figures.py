@@ -396,7 +396,7 @@ def figure_04_ablation(repo_root: Path, out_dir: Path) -> Optional[Path]:
 # ---------------------------------------------------------------------------
 
 TRUE_COLUMNS = [
-    "y_true", "label", "target", "is_malicious", "ground_truth",
+    "y_true", "label", "target", "is_malicious", "malicious", "ground_truth",
 ]
 SCORE_COLUMNS = [
     "score", "probability", "prediction", "pred", "y_score",
@@ -411,6 +411,7 @@ def detect_prediction_columns(df: pd.DataFrame) -> tuple[Optional[str], Optional
 def infer_model_from_filename(path: Path) -> Optional[str]:
     name = normalise_name(path.stem)
     mapping = [
+        ("lightgbmbenchmark", "LightGBM (benchmark)"),
         ("logistic", "Logistic Regression"),
         ("randomforest", "Random Forest"),
         ("xgboost", "XGBoost"),
