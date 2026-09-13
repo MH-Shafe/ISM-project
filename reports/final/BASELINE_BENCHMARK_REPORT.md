@@ -20,54 +20,61 @@ Evaluate and compare standard ML baselines against the production LightGBM model
 
 ## 3. Dataset / Split
 
-| Property | Value |
-|----------|-------|
-| Dataset | CERT r4.2 |
-| Analytical unit | User × Day |
-| Train period | (defined in data config) |
-| Calibration period | (defined in data config) |
-| Test period | (defined in data config) |
-| Positive class ratio | Highly imbalanced (~0.5% insiders) |
+| Split | Rows | Positives | Date Range |
+|-------|------|-----------|------------|
+| TRAIN | 395,000 | 1,539 | <= 2011-01-31 |
+| CALIBRATION | 59,000 | 323 | 2011-02-01 .. 2011-03-31 |
+| TEST | 47,000 | 30 | >= 2011-04-01 |
+
+**Dataset**: CERT r4.2 | **Analytical unit**: User × Day | **Prevalence**: 0.38%
 
 ## 4. Features
 
-All models used the same feature set:
-- **Version:** Feature pipeline v1 (frozen production features)
-- **Count:** 78 features across behavioral categories
-- **Categories:** HR, login, email, HTTP, device, file access, psychology
-- **Preprocessing:** Standard scaling for LR, raw for tree-based models
+All 12 frozen features (8 behavioral + 4 graph):
+
+1. login_count
+2. after_hours_login_count
+3. usb_connection_count
+4. file_access_count
+5. sensitive_file_access_count
+6. http_activity_count
+7. unique_device_count
+8. unusual_access_count
+9. device_consistency_score
+10. rare_device_usage_count
+11. file_type_consistency_score
+12. rare_file_type_access_count
 
 ## 5. Model Configurations
 
 ### Logistic Regression
-- **Type:** Linear classifier with L2 regularization
-- **Parameters:** C=1.0, solver='lbfgs', max_iter=1000
-- **Size:** 1,757 bytes
+- Pipeline: StandardScaler + LogisticRegression
+- penalty=l2, solver=liblinear, class_weight=balanced, max_iter=2000, random_state=42
+- Size: 1,757 bytes
 
 ### Random Forest
-- **Type:** Ensemble of decision trees
-- **Parameters:** n_estimators=100, max_depth=None, min_samples_split=2
-- **Size:** 79,778,441 bytes (~76 MB)
+- n_estimators=500, max_depth=None, min_samples_leaf=2, max_features=sqrt
+- class_weight=balanced, random_state=42
+- Size: 79,778,441 bytes (~76 MB)
 
 ### XGBoost
-- **Type:** Gradient boosted trees
-- **Parameters:** n_estimators=100, max_depth=6, learning_rate=0.1
-- **Size:** 2,162,687 bytes (~2.1 MB)
+- n_estimators=3000, lr=0.03, max_depth=6, subsample=0.8, colsample_bytree=0.8
+- scale_pos_weight=255.66, random_state=42, early_stopping_rounds=100, best_iter=345
+- Size: 2,162,687 bytes (~2.1 MB)
 
 ### CatBoost
-- **Type:** Gradient boosted trees with categorical handling
-- **Parameters:** iterations=100, depth=6, learning_rate=0.1
-- **Size:** 490,496 bytes (~479 KB)
+- iterations=3000, lr=0.03, depth=6
+- class_weights={0:1.0, 1:255.66}, random_seed=42, early_stopping_rounds=100, best_iter=406
+- Size: 490,496 bytes (~479 KB)
 
 ### LightGBM (benchmark)
-- **Type:** Gradient boosted trees (leaf-wise)
-- **Parameters:** n_estimators=100, num_leaves=31, learning_rate=0.1
-- **Size:** 650,716 bytes (~635 KB)
+- Identical to frozen: lr=0.03, num_leaves=31, min_data_in_leaf=100
+- feature_fraction=0.8, bagging_fraction=0.8, seed=42, best_iter=186
+- Size: 650,716 bytes (~635 KB)
 
 ### LightGBM (frozen)
-- **Type:** Production model snapshot
-- **Evidence:** FROZEN PRODUCTION
-- **Size:** 651,047 bytes (~636 KB)
+- Production snapshot from Phase 7, identical config to benchmark
+- Size: 651,047 bytes (~636 KB)
 
 ## 6. Threshold Selection
 
@@ -150,17 +157,15 @@ Thresholds were optimized on the calibration set to maximize F1 score:
 
 ## 11. Confusion Matrices
 
-At selected thresholds (test set):
+| Model | TP | FP | TN | FN | Alerts | Precision | Recall |
+|-------|----|----|----|----|--------|-----------|--------|
+| Logistic Regression | 16 | 1,103 | 45,867 | 14 | 1,119 | 0.014 | 0.533 |
+| Random Forest | 11 | 83 | 46,887 | 19 | 94 | 0.117 | 0.367 |
+| XGBoost | 20 | 91 | 46,879 | 10 | 111 | 0.180 | 0.667 |
+| CatBoost | 16 | 92 | 46,878 | 14 | 108 | 0.148 | 0.533 |
+| LightGBM (benchmark) | 14 | 35 | 46,935 | 16 | 49 | 0.286 | 0.467 |
 
-| Model | TP | FP | TN | FN | Alert Rate |
-|-------|----|----|----|----|------------|
-| Logistic Regression | 16 | 1103 | ~148,000 | 14 | 0.75% |
-| Random Forest | 11 | 83 | ~149,000 | 19 | 0.06% |
-| XGBoost | 20 | 91 | ~149,000 | 10 | 0.07% |
-| CatBoost | 16 | 92 | ~149,000 | 14 | 0.07% |
-| LightGBM (benchmark) | 14 | 35 | ~149,000 | 16 | 0.03% |
-
-**Note:** Exact counts depend on test set size; values are approximate.
+**Key insight:** LightGBM achieves the fewest false positives (35) and highest precision (0.286) while maintaining competitive recall (0.467).
 
 ## 12. Statistical Uncertainty
 
@@ -194,9 +199,10 @@ The benchmark and frozen LightGBM models are numerically consistent, confirming 
 ## 15. Reproducibility
 
 ### Environment
-- Python 3.10+
-- scikit-learn, XGBoost, CatBoost, LightGBM
-- CERT r4.2 dataset (Kaggle)
+- Python 3.12.13, NumPy 2.0.2, Pandas 2.3.3
+- scikit-learn 1.6.1, LightGBM 4.6.0, XGBoost 3.2.0, CatBoost 1.2.10
+- PyArrow 24.0.0 (parquet I/O)
+- CERT r4.2 dataset (Kaggle, read-only)
 
 ### Random Seeds
 - All models: random_state=42
