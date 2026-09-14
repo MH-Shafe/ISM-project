@@ -85,13 +85,39 @@ if REPO_ROOT is None and AUTO_CLONE:
 if REPO_ROOT is not None:
     print(f"Repository root: {REPO_ROOT}")
     try:
-        sha = subprocess.check_output(
+        sha_before = subprocess.check_output(
             ["git", "rev-parse", "--short", "HEAD"],
             cwd=str(REPO_ROOT), text=True,
         ).strip()
-        print(f"Git commit: {sha}")
+        print(f"Git commit before update: {sha_before}")
     except Exception:
-        print("Git commit: (unknown)")
+        sha_before = None
+        print("Git commit before update: (unknown)")
+
+    # Attempt safe pull if worktree is clean
+    try:
+        status = subprocess.check_output(
+            ["git", "status", "--porcelain"],
+            cwd=str(REPO_ROOT), text=True,
+        ).strip()
+        if not status:
+            subprocess.check_call(
+                ["git", "fetch", "origin", "main"],
+                cwd=str(REPO_ROOT), timeout=30,
+            )
+            subprocess.check_call(
+                ["git", "pull", "--ff-only", "origin", "main"],
+                cwd=str(REPO_ROOT), timeout=30,
+            )
+            sha_after = subprocess.check_output(
+                ["git", "rev-parse", "--short", "HEAD"],
+                cwd=str(REPO_ROOT), text=True,
+            ).strip()
+            print(f"Git commit after update:  {sha_after}")
+        else:
+            print("Repository has local changes; skipping automatic pull.")
+    except Exception as e:
+        print(f"Git update failed: {e}")
 else:
     print("ERROR: Repository not found. Cannot continue.")"""))
 
@@ -103,8 +129,8 @@ import json, hashlib, warnings
 import numpy as np
 import pandas as pd
 import matplotlib
-matplotlib.use("Agg")
 import matplotlib.pyplot as plt
+from IPython.display import display
 from sklearn.metrics import (
     roc_curve, roc_auc_score,
     precision_recall_curve, average_precision_score,
@@ -120,12 +146,15 @@ plt.rcParams.update({
     "legend.fontsize": LEGEND_SIZE,
 })
 
-def maybe_save(fig, filename):
-    if SAVE_FIGURES:
+def show_figure(fig, filename=None):
+    \"\"\"Display figure inline and optionally save it.\"\"\"
+    if SAVE_FIGURES and filename:
         out = REPO_ROOT / "reports" / "figures" / "notebook_generated"
         out.mkdir(parents=True, exist_ok=True)
         fig.savefig(out / filename, dpi=300, bbox_inches="tight")
-        print(f"  Saved: {out / filename}")"""))
+        print(f"Saved: {out / filename}")
+    display(fig)
+    plt.close(fig)"""))
 
 # ── Cell 5: Artifact discovery ──
 cells.append(code("""def first_existing(*paths):
@@ -143,10 +172,14 @@ shap_path = first_existing(
     REPO_ROOT / "reports/artifacts/phase11_global_importance.csv",
     REPO_ROOT / "artifacts/summaries/phase11_global_importance.json",
 )
+baseline_csv_path = first_existing(
+    REPO_ROOT / "reports/final/BASELINE_MODEL_COMPARISON.csv",
+    REPO_ROOT / "reports/artifacts/baseline_benchmark/BASELINE_MODEL_COMPARISON.csv",
+)
 
 artifacts = {
     "ablation":              ablation_path,
-    "baseline_csv":          REPO_ROOT / "reports/final/BASELINE_MODEL_COMPARISON.csv",
+    "baseline_csv":          baseline_csv_path,
     "all_results":           REPO_ROOT / "reports/artifacts/baseline_benchmark/all_results.json",
     "freeze":                REPO_ROOT / "reports/artifacts/baseline_benchmark/BENCHMARK_FREEZE.json",
     "bootstrap_ci":          REPO_ROOT / "reports/artifacts/baseline_benchmark/bootstrap_confidence_intervals.json",
@@ -249,8 +282,7 @@ ax.text(0.5, 0.025,
         "Adaptive Risk was evaluated and rejected; it is not part of the production path.",
         ha="center", va="bottom", fontsize=9, style="italic")
 
-maybe_save(fig, "figure_01_system_architecture.png")
-plt.show()"""))
+show_figure(fig, "figure_01_system_architecture.png")"""))
 
 # ── Cell 8: Figure 2 — Chronological Split ──
 cells.append(md("## Figure 2 — Leakage-Safe Chronological Split"))
@@ -286,8 +318,7 @@ ax.text(0.5, -0.18,
         transform=ax.transAxes, ha="center", fontsize=9)
 fig.subplots_adjust(bottom=0.22, top=0.90)
 
-maybe_save(fig, "figure_02_chronological_split.png")
-plt.show()"""))
+show_figure(fig, "figure_02_chronological_split.png")"""))
 
 # ── Cell 9: Figure 3 — Class Distribution ──
 cells.append(md("## Figure 3 — CERT r4.2 Class Distribution"))
@@ -312,8 +343,7 @@ ax.text(0.5, -0.12, f"Total = {total:,} user-days  |  Malicious = {malicious:,}"
         transform=ax.transAxes, ha="center", fontsize=9)
 fig.subplots_adjust(bottom=0.16, top=0.92)
 
-maybe_save(fig, "figure_03_class_distribution.png")
-plt.show()"""))
+show_figure(fig, "figure_03_class_distribution.png")"""))
 
 # ── Cell 10: Figure 4 — Ablation ──
 cells.append(md("## Figure 4 — Leakage-Safe Ablation Comparison"))
@@ -364,8 +394,7 @@ for i, (p, f, m) in enumerate(zip(pr_auc, f1_vals, mcc_vals)):
     ax.text(i + w, m + 0.005, f"{m:.3f}", ha="center", va="bottom", fontsize=8)
 
 fig.subplots_adjust(bottom=0.20, top=0.90)
-maybe_save(fig, "figure_04_ablation.png")
-plt.show()"""))
+show_figure(fig, "figure_04_ablation.png")"""))
 
 # ── Cell 11: Figure 5A — ROC ──
 cells.append(md("## Figure 5A — ROC Curves on Chronological TEST"))
@@ -391,8 +420,7 @@ ax.set_title("Figure 5A. ROC Curves — All Five Models on Chronological TEST",
 ax.legend(fontsize=LEGEND_SIZE, loc="lower right")
 ax.grid(alpha=GRID_ALPHA)
 
-maybe_save(fig, "figure_05a_roc.png")
-plt.show()"""))
+show_figure(fig, "figure_05a_roc.png")"""))
 
 # ── Cell 12: Figure 5B — PR ──
 cells.append(md("## Figure 5B — Precision–Recall Curves on Chronological TEST"))
@@ -416,8 +444,7 @@ ax.set_title("Figure 5B. Precision–Recall Curves — All Five Models",
 ax.legend(fontsize=LEGEND_SIZE, loc="upper right")
 ax.grid(alpha=GRID_ALPHA)
 
-maybe_save(fig, "figure_05b_pr.png")
-plt.show()"""))
+show_figure(fig, "figure_05b_pr.png")"""))
 
 # ── Cell 13: Figure 6 — SHAP ──
 cells.append(md("## Figure 6 — Global SHAP Feature Importance"))
@@ -452,8 +479,7 @@ for bar, val in zip(bars, shap_df["importance"]):
             f"{val:.3f}", va="center", fontsize=9)
 
 fig.subplots_adjust(left=0.32, top=0.94)
-maybe_save(fig, "figure_06_shap.png")
-plt.show()"""))
+show_figure(fig, "figure_06_shap.png")"""))
 
 # ── Cell 14: Figure 7 — Decision Distribution ──
 cells.append(md("## Figure 7 — Final Operational Decision Distribution"))
@@ -481,17 +507,34 @@ ax.text(0.5, -0.13, f"Complete Phase 20 population: {total_d:,} user-days",
         transform=ax.transAxes, ha="center", fontsize=9)
 fig.subplots_adjust(bottom=0.18, top=0.92)
 
-maybe_save(fig, "figure_07_decisions.png")
-plt.show()"""))
+show_figure(fig, "figure_07_decisions.png")"""))
 
 # ── Cell 15: Figure 8 — Baseline Comparison ──
 cells.append(md("## Figure 8 — Post-Freeze Baseline Comparison"))
-cells.append(code("""bdf = pd.read_csv(artifacts["baseline_csv"])
+cells.append(code("""if artifacts["baseline_csv"] is not None and artifacts["baseline_csv"].exists():
+    bdf = pd.read_csv(artifacts["baseline_csv"])
+    print("Figure 8 source: BASELINE_MODEL_COMPARISON.csv")
+else:
+    print("Figure 8 source: all_results.json fallback")
+    required_models = ["Logistic Regression", "Random Forest", "XGBoost", "CatBoost", "LightGBM (frozen)"]
+    rows = []
+    for model in required_models:
+        r = all_results.get(model, {})
+        rows.append({
+            "Model": model,
+            "PR-AUC": r.get("pr_auc", 0),
+            "F1": r.get("f1", 0),
+            "MCC": r.get("mcc", 0),
+        })
+    bdf = pd.DataFrame(rows)
 
 MODEL_ORDER = ["Logistic Regression", "Random Forest", "XGBoost", "CatBoost", "LightGBM (frozen)"]
 name_col = "Model"
+if "PR-AUC" not in bdf.columns and "pr_auc" in bdf.columns:
+    bdf = bdf.rename(columns={"pr_auc": "PR-AUC", "f1": "F1", "mcc": "MCC"})
 kept = bdf[bdf[name_col].isin(MODEL_ORDER)].copy()
-kept = kept.set_index(name_col).loc[[m for m in MODEL_ORDER if m in kept.index]].reset_index()
+kept["_order"] = kept[name_col].map({m: i for i, m in enumerate(MODEL_ORDER)})
+kept = kept.sort_values("_order").drop(columns=["_order"]).reset_index(drop=True)
 
 DISPLAY = {
     "Logistic Regression": "Logistic\\nRegression",
@@ -527,8 +570,7 @@ ax.text(0.5, -0.18, "Same 12 features and chronological split; thresholds select
         transform=ax.transAxes, ha="center", fontsize=9)
 fig.subplots_adjust(bottom=0.22, top=0.92)
 
-maybe_save(fig, "figure_08_baselines.png")
-plt.show()"""))
+show_figure(fig, "figure_08_baselines.png")"""))
 
 # ── Cell 16: Figure 9 — Confusion Matrices ──
 cells.append(md("## Figure 9 — TEST Confusion Matrices"))
@@ -570,8 +612,7 @@ for display_name, key in CM_ORDER:
                  fontsize=12, fontweight="bold")
     fig.colorbar(im, ax=ax, fraction=0.046, pad=0.04)
     fig.tight_layout()
-    maybe_save(fig, f"figure_09_confusion_{key}.png")
-    plt.show()"""))
+    show_figure(fig, f"figure_09_confusion_{key}.png")"""))
 
 # ── Cell 17: Bootstrap CI ──
 cells.append(md("## Supplementary Figure — Bootstrap 95% Confidence Intervals"))
@@ -612,24 +653,31 @@ for ax, metric, label in zip(axes, metrics_ci, metric_labels):
 fig.suptitle("Supplementary Figure. Bootstrap Confidence Intervals",
              fontsize=TITLE_SIZE, fontweight="bold", y=1.01)
 fig.tight_layout()
-maybe_save(fig, "figure_10_bootstrap_ci.png")
-plt.show()"""))
+show_figure(fig, "figure_10_bootstrap_ci.png")"""))
 
 # ── Cell 18: Validation summary ──
 cells.append(md("## Final Validation Summary"))
-cells.append(code("""checks = {
-    "Repository detected":      REPO_ROOT is not None,
-    "Ablation artifact":        artifacts["ablation"] is not None and artifacts["ablation"].exists(),
-    "Baseline CSV":             artifacts["baseline_csv"].exists(),
-    "All results JSON":         artifacts["all_results"].exists(),
-    "Freeze JSON":              artifacts["freeze"].exists(),
-    "Bootstrap CI JSON":        artifacts["bootstrap_ci"].exists(),
-    "SHAP artifact":            artifacts["shap"] is not None and artifacts["shap"].exists(),
-    "Decisions parquet":        artifacts["decisions_parquet"] is not None and artifacts["decisions_parquet"].exists(),
-    "Prediction dir":           artifacts["pred_dir"].is_dir(),
-    "All 5 models loaded":      len(pred_data) == 5,
-    "All predictions PASS":     (val_df["Status"] == "PASS").all() if len(val_df) == 5 else False,
-    "SAVE_FIGURES default":     SAVE_FIGURES == False,
+cells.append(code("""baseline_source_ok = (
+    (artifacts["baseline_csv"] is not None and artifacts["baseline_csv"].exists())
+    or
+    (artifacts["all_results"].exists() and all(
+        m in all_results for m in ["Logistic Regression", "Random Forest", "XGBoost", "CatBoost"]
+    ))
+)
+
+checks = {
+    "Repository detected":              REPO_ROOT is not None,
+    "Ablation artifact":                artifacts["ablation"] is not None and artifacts["ablation"].exists(),
+    "Baseline comparison source":       baseline_source_ok,
+    "All results JSON":                 artifacts["all_results"].exists(),
+    "Freeze JSON":                      artifacts["freeze"].exists(),
+    "Bootstrap CI JSON":                artifacts["bootstrap_ci"].exists(),
+    "SHAP artifact":                    artifacts["shap"] is not None and artifacts["shap"].exists(),
+    "Decisions parquet":                artifacts["decisions_parquet"] is not None and artifacts["decisions_parquet"].exists(),
+    "Prediction dir":                   artifacts["pred_dir"].is_dir(),
+    "All 5 models loaded":              len(pred_data) == 5,
+    "All predictions PASS":             (val_df["Status"] == "PASS").all() if len(val_df) == 5 else False,
+    "SAVE_FIGURES default":             SAVE_FIGURES == False,
 }
 
 summary = pd.DataFrame([
