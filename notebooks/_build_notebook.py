@@ -1,11 +1,16 @@
 """Build the ISM_Report_Figure_Generator.ipynb notebook."""
 import json
 
+def _split_source(source):
+    """Split source into notebook-format lines (each ending with \\n except last)."""
+    lines = source.split("\n")
+    return [l + "\n" for l in lines[:-1]] + [lines[-1]]
+
 def md(source):
-    return {"cell_type": "markdown", "metadata": {}, "source": source.split("\n")}
+    return {"cell_type": "markdown", "metadata": {}, "source": _split_source(source)}
 
 def code(source):
-    return {"cell_type": "code", "metadata": {}, "source": source.split("\n"), "outputs": [], "execution_count": None}
+    return {"cell_type": "code", "metadata": {}, "source": _split_source(source), "outputs": [], "execution_count": None}
 
 cells = []
 
@@ -293,55 +298,97 @@ sp_train = abl_splits.get("train", {})
 sp_cal   = abl_splits.get("cal", {})
 sp_test  = abl_splits.get("test", {})
 
-rows_n = [sp_train.get("rows", 0), sp_cal.get("rows", 0), sp_test.get("rows", 0)]
-pos_n  = [sp_train.get("positives", 0), sp_cal.get("positives", 0), sp_test.get("positives", 0)]
-names  = ["TRAIN", "CAL", "TEST"]
-dates  = ["≤ 2011-01-31", "2011-02-01 → 2011-03-31", "≥ 2011-04-01"]
+train_rows = sp_train.get("rows", 0)
+cal_rows   = sp_cal.get("rows", 0)
+test_rows  = sp_test.get("rows", 0)
+train_pos  = sp_train.get("positives", 0)
+cal_pos    = sp_cal.get("positives", 0)
+test_pos   = sp_test.get("positives", 0)
 
-fig, ax = plt.subplots(figsize=FIGSIZE)
-x = np.arange(len(names))
-bars = ax.bar(x, rows_n, color=["#4C72B0", "#55A868", "#C44E52"])
-ax.set_xticks(x); ax.set_xticklabels(names, fontsize=TICK_SIZE)
-ax.set_ylabel("User-Days", fontsize=LABEL_SIZE)
-ax.set_title("Figure 2. Leakage-Safe Chronological Data Split",
-             fontsize=TITLE_SIZE, fontweight="bold")
-ax.grid(axis="y", alpha=GRID_ALPHA)
+fig, ax = plt.subplots(figsize=(12, 4.8))
+ax.axis("off")
+ax.set_xlim(0, 12)
+ax.set_ylim(0, 4.5)
 
-ymax = max(rows_n)
-for bar, n, p, d in zip(bars, rows_n, pos_n, dates):
-    ax.text(bar.get_x() + bar.get_width()/2, bar.get_height() + ymax*0.025,
-            f"{d}\\n{n:,} rows\\n{p:,} positive",
-            ha="center", va="bottom", fontsize=9)
+box_w, box_h = 3.0, 2.8
+box_y = 0.8
+box_centers = [2.0, 6.0, 10.0]
+box_colors  = ["#4C72B0", "#55A868", "#C44E52"]
+stage_names = ["TRAIN", "CAL", "TEST"]
+date_lines  = [
+    ["≤ 2011-01-31"],
+    ["2011-02-01", "to", "2011-03-31"],
+    ["≥ 2011-04-01"],
+]
+row_lines = [f"{train_rows:,} user-days", f"{cal_rows:,} user-days", f"{test_rows:,} user-days"]
+pos_lines = [f"{train_pos:,} malicious", f"{cal_pos:,} malicious", f"{test_pos:,} malicious"]
 
-ax.text(0.5, -0.18,
-        "TRAIN → CAL → TEST  |  No temporal overlap  |  TEST never used for training or threshold fitting",
-        transform=ax.transAxes, ha="center", fontsize=9)
-fig.subplots_adjust(bottom=0.22, top=0.90)
+for i, (cx, color, name, dates, rows_txt, pos_txt) in enumerate(
+    zip(box_centers, box_colors, stage_names, date_lines, row_lines, pos_lines)
+):
+    rect = plt.Rectangle((cx - box_w/2, box_y), box_w, box_h,
+                          linewidth=1.5, edgecolor=color, facecolor="white",
+                          zorder=2)
+    ax.add_patch(rect)
+    header_rect = plt.Rectangle((cx - box_w/2, box_y + box_h - 0.55), box_w, 0.55,
+                                linewidth=0, edgecolor="none", facecolor=color, alpha=0.15, zorder=3)
+    ax.add_patch(header_rect)
+    ax.text(cx, box_y + box_h - 0.25, name, ha="center", va="center",
+            fontsize=14, fontweight="bold", color=color, zorder=4)
+    date_y = box_y + box_h - 0.9
+    for line in dates:
+        ax.text(cx, date_y, line, ha="center", va="center", fontsize=9.5, zorder=4)
+        date_y -= 0.28
+    ax.text(cx, box_y + 0.7, rows_txt, ha="center", va="center", fontsize=10, zorder=4)
+    ax.text(cx, box_y + 0.35, pos_txt, ha="center", va="center", fontsize=9.5,
+            color="#C44E52", zorder=4)
 
+for i in range(len(box_centers) - 1):
+    x_start = box_centers[i] + box_w/2 + 0.05
+    x_end   = box_centers[i+1] - box_w/2 - 0.05
+    x_mid   = (x_start + x_end) / 2
+    ax.annotate("", xy=(x_end, box_y + box_h/2), xytext=(x_start, box_y + box_h/2),
+                arrowprops=dict(arrowstyle="-|>", lw=1.8, color="#555555", mutation_scale=18))
+
+ax.text(6.0, 0.25, "No temporal overlap  |  TEST used only for final evaluation",
+        ha="center", va="center", fontsize=10, style="italic", color="#555555")
+
+ax.text(6.0, 4.2, "Figure 2. Leakage-Safe Chronological Data Split",
+        ha="center", va="center", fontsize=TITLE_SIZE, fontweight="bold")
+
+fig.subplots_adjust(left=0.02, right=0.98, top=0.92, bottom=0.08)
 show_figure(fig, "figure_02_chronological_split.png")"""))
 
 # ── Cell 9: Figure 3 — Class Distribution ──
 cells.append(md("## Figure 3 — CERT r4.2 Class Distribution"))
-cells.append(code("""total      = sum(rows_n)
-malicious  = sum(pos_n)
+cells.append(code("""total      = train_rows + cal_rows + test_rows
+malicious  = train_pos + cal_pos + test_pos
 benign     = total - malicious
 
-fig, ax = plt.subplots(figsize=FIGSIZE)
-bars = ax.bar(["Benign", "Malicious"], [benign, malicious],
-              color=["#4C72B0", "#C44E52"])
-ax.set_ylabel("User-Day Count", fontsize=LABEL_SIZE)
+fig, ax = plt.subplots(figsize=(10, 5))
+categories = ["Benign", "Malicious"]
+counts     = [benign, malicious]
+colors     = ["#4C72B0", "#C44E52"]
+
+bars = ax.barh(categories, counts, color=colors, height=0.55)
+ax.set_xscale("log")
+ax.set_xlabel("User-Day Count (log scale)", fontsize=LABEL_SIZE)
 ax.set_title("Figure 3. CERT r4.2 User-Day Class Distribution",
              fontsize=TITLE_SIZE, fontweight="bold")
-ax.grid(axis="y", alpha=GRID_ALPHA)
+ax.grid(axis="x", alpha=GRID_ALPHA)
+ax.set_xlim(1, max(counts) * 5)
 
-for bar, val in zip(bars, [benign, malicious]):
+for bar, val, color in zip(bars, counts, colors):
     pct = 100.0 * val / total
-    ax.text(bar.get_x() + bar.get_width()/2, bar.get_height() + total*0.01,
-            f"{val:,}\\n({pct:.2f}%)", ha="center", va="bottom", fontsize=10)
+    label = f"{val:,} ({pct:.2f}%)"
+    x_pos = val * 1.25
+    ax.text(x_pos, bar.get_y() + bar.get_height()/2, label,
+            ha="left", va="center", fontsize=11, fontweight="bold", color=color)
 
-ax.text(0.5, -0.12, f"Total = {total:,} user-days  |  Malicious = {malicious:,}",
-        transform=ax.transAxes, ha="center", fontsize=9)
-fig.subplots_adjust(bottom=0.16, top=0.92)
+ax.text(0.5, -0.14,
+        f"Extreme class imbalance: {malicious:,} malicious user-days out of {total:,} total",
+        transform=ax.transAxes, ha="center", fontsize=9.5, style="italic", color="#555555")
+fig.subplots_adjust(bottom=0.18, top=0.92)
 
 show_figure(fig, "figure_03_class_distribution.png")"""))
 
@@ -398,9 +445,13 @@ show_figure(fig, "figure_04_ablation.png")"""))
 
 # ── Cell 11: Figure 5A — ROC ──
 cells.append(md("## Figure 5A — ROC Curves on Chronological TEST"))
-cells.append(code("""ORDER = ["logistic", "random_forest", "xgboost", "catboost", "lightgbm"]
+cells.append(code("""from mpl_toolkits.axes_grid1.inset_locator import inset_axes
+
+ORDER = ["logistic", "random_forest", "xgboost", "catboost", "lightgbm"]
 COLORS = {"logistic": "#C44E52", "random_forest": "#DD8452",
           "xgboost": "#55A868", "catboost": "#4C72B0", "lightgbm": "#937860"}
+STYLES = {"logistic": "-", "random_forest": "--",
+          "xgboost": "-", "catboost": "-.", "lightgbm": "-"}
 
 fig, ax = plt.subplots(figsize=FIGSIZE)
 for key in ORDER:
@@ -409,16 +460,46 @@ for key in ORDER:
     d = pred_data[key]
     fpr, tpr, _ = roc_curve(d["y"], d["score"])
     auc_val = roc_auc_score(d["y"], d["score"])
-    ax.plot(fpr, tpr, lw=LINE_WIDTH, color=COLORS[key],
+    lw = 2.8 if key == "lightgbm" else LINE_WIDTH
+    ax.step(fpr, tpr, where="post", lw=lw, color=COLORS[key],
+            linestyle=STYLES[key],
             label=f'{d["display"]} (AUC={auc_val:.3f})')
 
-ax.plot([0, 1], [0, 1], ls="--", lw=1, color="grey", label="Random")
+ax.step([0, 1], [0, 1], where="post", ls="--", lw=1, color="grey", label="Random")
 ax.set_xlabel("False Positive Rate", fontsize=LABEL_SIZE)
 ax.set_ylabel("True Positive Rate", fontsize=LABEL_SIZE)
 ax.set_title("Figure 5A. ROC Curves — All Five Models on Chronological TEST",
              fontsize=TITLE_SIZE, fontweight="bold")
-ax.legend(fontsize=LEGEND_SIZE, loc="lower right")
+ax.set_xlim(0, 1); ax.set_ylim(0, 1.02)
 ax.grid(alpha=GRID_ALPHA)
+
+axins = inset_axes(ax, width="38%", height="38%", loc="lower right",
+                   borderpad=0.35)
+for key in ORDER:
+    if key not in pred_data:
+        continue
+    d = pred_data[key]
+    fpr, tpr, _ = roc_curve(d["y"], d["score"])
+    auc_val = roc_auc_score(d["y"], d["score"])
+    lw = 2.8 if key == "lightgbm" else LINE_WIDTH
+    axins.step(fpr, tpr, where="post", lw=lw, color=COLORS[key],
+               linestyle=STYLES[key])
+axins.step([0, 1], [0, 1], where="post", ls="--", lw=0.8, color="grey")
+axins.set_xlim(0, 0.10)
+tpr_max = 1.02
+for key in ORDER:
+    if key not in pred_data:
+        continue
+    fpr_k, tpr_k, _ = roc_curve(pred_data[key]["y"], pred_data[key]["score"])
+    tpr_at_01 = tpr_k[fpr_k <= 0.10]
+    if len(tpr_at_01) > 0:
+        tpr_max = max(tpr_max, tpr_at_01.max() * 1.15)
+axins.set_ylim(0, min(tpr_max, 1.02))
+axins.set_title("Low-FPR region", fontsize=8, pad=2)
+axins.tick_params(labelsize=7)
+axins.grid(alpha=GRID_ALPHA)
+
+ax.legend(fontsize=8.5, loc="lower center", ncol=3, bbox_to_anchor=(0.5, -0.22))
 
 show_figure(fig, "figure_05a_roc.png")"""))
 
@@ -431,20 +512,30 @@ for key in ORDER:
     d = pred_data[key]
     prec, rec, _ = precision_recall_curve(d["y"], d["score"])
     ap = average_precision_score(d["y"], d["score"])
-    ax.plot(rec, prec, lw=LINE_WIDTH, color=COLORS[key],
+    lw = 2.8 if key == "lightgbm" else LINE_WIDTH
+    ax.step(rec, prec, where="post", lw=lw, color=COLORS[key],
+            linestyle=STYLES[key],
             label=f'{d["display"]} (AP={ap:.3f})')
 
-prevalence = 30 / 47000
-ax.axhline(y=prevalence, ls=":", lw=1, color="grey",
-           label=f"Random / prevalence ({prevalence:.4f})")
+prevalence = pred_data[ORDER[0]]["y"].mean()
+ax.axhline(y=prevalence, ls=":", lw=1.2, color="grey",
+           label=f"Prevalence baseline ({prevalence:.6f})")
+ax.text(0.98, prevalence * 3, f"Positive prevalence = {prevalence*100:.3f}%",
+        ha="right", va="bottom", fontsize=9, color="grey", style="italic")
+
 ax.set_xlabel("Recall", fontsize=LABEL_SIZE)
 ax.set_ylabel("Precision", fontsize=LABEL_SIZE)
-ax.set_title("Figure 5B. Precision–Recall Curves — All Five Models",
+ax.set_title("Figure 5B. Precision–Recall Curves on Chronological TEST",
              fontsize=TITLE_SIZE, fontweight="bold")
-ax.legend(fontsize=LEGEND_SIZE, loc="upper right")
+ax.set_xlim(0, 1); ax.set_ylim(0, 1.02)
 ax.grid(alpha=GRID_ALPHA)
+ax.legend(fontsize=8.5, loc="upper center", ncol=2, bbox_to_anchor=(0.5, -0.14))
 
 show_figure(fig, "figure_05b_pr.png")"""))
+cells.append(md("""> **Note:** ROC and precision–recall curves are computed from the preserved row-level
+> chronological TEST predictions (47,000 user-days; 30 malicious user-days).
+> The step-like appearance reflects the small number of positive TEST examples
+> and is not smoothed."""))
 
 # ── Cell 13: Figure 6 — SHAP ──
 cells.append(md("## Figure 6 — Global SHAP Feature Importance"))
